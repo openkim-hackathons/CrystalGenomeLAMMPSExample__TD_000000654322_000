@@ -1,0 +1,5 @@
+@< path("{{TEST_DRIVER_NAME}}") >@ {# FILENAME = pipeline.stdin.tpl #}
+@< MODELNAME >@
+{{stoichiometric_species}}
+{{prototype_label}}
+{{crystal_genome_test_args}}

@@ -1,0 +1,9 @@
+{
+  "extended-id" "{{TEST_DRIVER_NAME.split('_')[:-4]|join('_')}}_{{prototype_label}}_{{stoichiometric_species|join("")}}__TE_{{kimnum}}_000"
+  "test-driver" "{{TEST_DRIVER_NAME}}"
+  "kim-api-version" "2.3"
+  "executables" ["runner"]
+  "domain" "openkim.org"
+  "matching-models" ["standard-models"]
+  "species" ["{{stoichiometric_species|join('" "')}}"]
+}{# FILENAME = kimspec.edn #}

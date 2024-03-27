@@ -1,0 +1,32 @@
+{
+    "property-id" "tag:staff@noreply.openkim.org,2023-02-21:property/binding-energy-crystal" 
+    "instance-id" 1 
+    "prototype-label" {
+        "source-value" "A_cI2_229_a"
+    } 
+    "stoichiometric-species" {
+        "source-value" [
+            "Fe"
+        ]
+    } 
+    "a" {
+        "source-value" 2.863 
+        "source-unit" "angstrom"
+    } 
+    "library-prototype-label" {
+        "source-value" "A_cI2_229_a"
+    } 
+    "short-name" {
+        "source-value" [
+            "Body-Centered Cubic"
+        ]
+    } 
+    "binding-potential-energy-per-atom" {
+        "source-value" -4.290206779588354 
+        "source-unit" "eV"
+    } 
+    "binding-potential-energy-per-formula" {
+        "source-value" -4.290206779588354 
+        "source-unit" "eV"
+    }
+}

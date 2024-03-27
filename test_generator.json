@@ -1,16 +1,16 @@
-{"stoichiometric_species": ["Fe", "P"], "prototype_label": "A2B_hP9_189_fg_ad", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "499688452456"}
-{"stoichiometric_species": ["Fe", "P"], "prototype_label": "A3B_tI32_82_3g_g", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "017429032024"}
-{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB_oP8_62_c_c", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "454203363835"}
-{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB2_oP6_58_a_g", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "374953847044"}
-{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB4_mC40_15_ae_4f", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "239734501490"}
-{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB4_mP30_14_ae_6e", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "750397799363"}
-{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB4_oC20_20_a_2c", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "937763753855"}
-{"stoichiometric_species": ["Fe"], "prototype_label": "A_cF4_225_a", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "670359426001"}
-{"stoichiometric_species": ["Fe"], "prototype_label": "A_cI2_229_a", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "014955462334"}
-{"stoichiometric_species": ["Fe"], "prototype_label": "A_hP2_194_c", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "383217304434"}
-{"stoichiometric_species": ["Fe"], "prototype_label": "A_tP28_136_f2ij", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "637638576551"}
-{"stoichiometric_species": ["P"], "prototype_label": "A_aP24_2_12i", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "996284090790"}
-{"stoichiometric_species": ["P"], "prototype_label": "A_cP1_221_a", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "730068647359"}
-{"stoichiometric_species": ["P"], "prototype_label": "A_mC16_12_2ij", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "506327127219"}
-{"stoichiometric_species": ["P"], "prototype_label": "A_oC8_64_f", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "383527065622"}
-{"stoichiometric_species": ["P"], "prototype_label": "A_tI4_139_e", "crystal_genome_test_args": {"example_arg": "example_argument"}, "kimnum": "123312191111"}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "A2B_hP9_189_fg_ad", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "A3B_tI32_82_3g_g", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB_oP8_62_c_c", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB2_oP6_58_a_g", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB4_mC40_15_ae_4f", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB4_mP30_14_ae_6e", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "AB4_oC20_20_a_2c", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe"], "prototype_label": "A_cF4_225_a", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe"], "prototype_label": "A_cI2_229_a", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe"], "prototype_label": "A_hP2_194_c", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["Fe"], "prototype_label": "A_tP28_136_f2ij", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["P"], "prototype_label": "A_aP24_2_12i", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["P"], "prototype_label": "A_cP1_221_a", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["P"], "prototype_label": "A_mC16_12_2ij", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["P"], "prototype_label": "A_oC8_64_f", "crystal_genome_test_args": {"example_arg": "example_argument"}}
+{"stoichiometric_species": ["P"], "prototype_label": "A_tI4_139_e", "crystal_genome_test_args": {"example_arg": "example_argument"}}

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from test_driver import TestDriver
-from kim_test_utils.test_driver import query_crystal_genome_structures
 from ast import literal_eval
 
 model_name = input("Model name?\n")
@@ -10,11 +9,31 @@ stoichiometric_species = literal_eval(input("Stoichiometric species?\n"))
 print(stoichiometric_species)
 prototype_label = input("Prototype label?\n")
 print(prototype_label)
+query_result = literal_eval(input("Query result (list of dicts)?\n"))
+print(query_result)
 runtime_args = literal_eval(input("Runtime arguments (dictonary)?\n"))
 print(runtime_args)
 test = TestDriver(model_name)
 # TODO: generalize this for finite temperature and pressure
-cg_des_list = query_crystal_genome_structures(model_name,stoichiometric_species,prototype_label)
-for cg_des in cg_des_list:    
-    test(**cg_des,**runtime_args)
+for query_element in query_result:
+    addtl_cg_fields = {}
+    parameter_values_angstrom = [query_element['a.si-value']*1e10]
+    if 'parameter-values.source-value' in query_element:
+        parameter_values_angstrom += query_element['parameter-values.source-value']
+    if 'parameter-names.source-value' in query_element:
+        addtl_cg_fields['parameter_names'] = query_element['parameter-names.source-value']
+    if 'library-prototype-label.source-value' in query_element:
+        addtl_cg_fields['library_prototype_label'] = query_element['library-prototype-label.source-value']
+    if 'short-name.source-value' in query_element:
+        short_name = query_element['short-name.source-value']
+        if not isinstance(short_name,list):
+            short_name = [short_name]
+        addtl_cg_fields['short_name'] = short_name    
+    test(
+        stoichiometric_species = stoichiometric_species,
+        prototype_label = prototype_label,
+        parameter_values_angstrom = parameter_values_angstrom,
+        **addtl_cg_fields,
+        **runtime_args
+        )
 test.write_property_instances_to_file()

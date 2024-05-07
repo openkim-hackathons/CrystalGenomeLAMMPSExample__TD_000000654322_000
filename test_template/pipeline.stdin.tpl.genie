@@ -2,4 +2,26 @@
 @< MODELNAME >@
 {{stoichiometric_species}}
 {{prototype_label}}
+@< query({
+    "query": {
+        "meta.type":"tr",
+        "property-id":"tag:staff@noreply.openkim.org,2023-02-21:property/crystal-structure-npt",
+        "meta.subject.extended-id":MODELNAME,
+        "stoichiometric-species.source-value":{
+            "$size":{{stoichiometric_species|length}},
+            "$all":{{stoichiometric_species}}
+        },
+        "prototype-label.source-value": "{{prototype_label}}",
+        "cell-cauchy-stress.si-value": 0,
+        "temperature.si-value": 0
+    },
+    "fields":{
+        "a.si-value":1,
+        "parameter-names.source-value":1,
+        "parameter-values.source-value":1,
+        "library-prototype-label.source-value":1,
+        "short-name.source-value":1,
+    },
+    "database":"data", "limit":0, "flat":"on"
+}) >@
 {{crystal_genome_test_args}}

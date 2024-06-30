@@ -1,14 +1,22 @@
+"""
+CrystalGenomeASEExample
+=======================
+
+Example usage of the kim-test-utils package to make an ASE test
+"""
+
+
 #!/usr/bin/python
 
-from kim_test_utils.test_driver import CrystalGenomeTestDriver, query_crystal_genome_structures
+from kim_test_utils import CrystalGenomeTestDriver, query_crystal_genome_structures
 from ase.build import bulk
 from kim_python_utils.ase import get_isolated_energy_per_atom
-from crystal_genome_util.aflow_util import get_stoich_reduced_list_from_prototype
+from kim_test_utils import get_stoich_reduced_list_from_prototype
 
 class TestDriver(CrystalGenomeTestDriver):
     def _calculate(self, example_arg: str, **kwargs):
         """
-        Example calculate method. Just recalculates the binding-energy-crystal property.
+        Example calculate method. Doesn't actually do any calculations, just demonstrates example functionality.
 
         You may add arbitrary arguments, which will be passed to this method when the test driver is invoked.
 
@@ -16,7 +24,7 @@ class TestDriver(CrystalGenomeTestDriver):
 
         Args:
             example_arg:
-                An example argument
+                An example argument. This would be an additional variable needed to define your simulation besides the crystal
         """
 
         ####################################################

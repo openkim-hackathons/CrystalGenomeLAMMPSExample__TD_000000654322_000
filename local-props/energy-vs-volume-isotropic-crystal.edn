@@ -1,17 +1,46 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; START OF SECTION YOU SHOULD CHANGE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 {
-  "property-id" "tag:staff@noreply.openkim.org,2024-03-11:property/energy-vs-volume-isotropic"
+  "property-id" "tag:staff@noreply.openkim.org,2024-03-11:property/energy-vs-volume-isotropic-crystal"
 
-  "property-title" "Energy vs. per-atom volume of an arbitrary crystal under isotropic expansion and compression."
+  "property-title" "Energy vs. volume of an arbitrary crystal under isotropic expansion and compression."
 
-  "property-description" "This is an example property definition for you to use as a template. It contains example keys that you should replace with one or more keys necessary to describe your material property, as well as the common keys for all Crystal Genome properties that you should uncomment or leave. See the comments below. See https://openkim.org/doc/schema/properties-framework/ to see the schema for a property definition, and https://openkim.org/doc/schema/edn-format/ for the edn format more generally. To be able to use this property in your test driver during development (i.e. for the kim-property and, by extension, the kim-test-utils packages to recognize it), before it is integrated into openkim.org, first you must have the kim-property module installed in an editable location and then you need to run the `add_or_update_property` utility packaged with kim-test-utils."
+  "property-description" "Energy vs. volume curve for an arbitrary crystal under isotropic deformation. This is an example property definition for you to use as a template. It contains example keys that you should replace with one or more keys necessary to describe your material property, as well as the common keys for all Crystal Genome properties that you should uncomment or leave. See the comments below. See https://openkim.org/doc/schema/properties-framework/ to see the schema for a property definition, and https://openkim.org/doc/schema/edn-format/ for the edn format more generally. To be able to use this property in your test driver during development (i.e. for the kim-property and, by extension, the kim-test-utils packages to recognize it), before it is integrated into openkim.org, first you must have the kim-property module installed in an editable location and then you need to run the `add_or_update_property` utility packaged with kim-test-utils."
 
-  "identity-matrix" {
+  "binding-potential-energy-per-atom" {
     "type"         "float"
-    "has-unit"     false
-    "extent"       [3,3]
+    "has-unit"     true
+    "extent"       [":"]
     "required"     true
-    "description" "We will not do any calculations and just write an identity matrix here. Replace this key with the keys needed to describe your property. See https://openkim.org/doc/schema/properties-framework/ for an explanation of how to define a property key, and see the common Crystal Genome keys below for more examples."
+    "description" "Binding potential energy per atom of the crystal defined as follows: \\Delta \\bar{V}_{atom} = ( V(A_{N_A}B_{N_B}...) - [N_A V_{isolated}(A) + N_B V_{isolated}(B) + ...] )/(N_A + N_B ...), where \\Delta \\bar{V}_{atom} is the binding energy per atom, V(A_{N_A}B_{N_B}...) is the energy of (any) unit cell, V_{isolated}(X) is the energy of an isolated particle of species X, and N_X is the number of atoms of species X in the (same) unit cell."
   }
+  "binding-potential-energy-per-formula" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":"]
+    "required"     true
+    "description" "This variable has the same definition as 'binding-potential-energy-per-atom' except that the energy is normalized per chemical formula instead of per atom, i.e. \\Delta \\bar{V}_{formula} = \\Delta \\bar{V}_{atom} N_{formula}, where N_{formula} is the number of atoms in the reduced stoichiometric formula, i.e. the sum of indices in the first section of the prototype-label."
+  }
+  "volume-per-atom" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":"]
+    "required"     true
+    "description" "The volume of the unit cell divided by the number of atoms in the unit cell."
+  }
+  "volume-per-formula" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":"]
+    "required"     true
+    "description" "The volume of the unit cell divided by the number of atoms in the unit cell, multiplied by the number of atoms in the reduced stoichiometric formula, i.e. the sum of indices in the first section of the prototype-label."
+  }
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; END OF SECTION YOU SHOULD CHANGE (besides possibly uncommenting the block below)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; If your material property can be meaningfully characterized at finite temperature and stress, uncomment the below section. You should do this even if the Test Driver you are writing only works at 0K and 0 Bar, for when future Test Drivers are written that work at finite T and pressure.

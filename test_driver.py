@@ -5,20 +5,28 @@ CrystalGenomeASEExample
 Example usage of the kim-test-utils package to make a Crystal Genome Test Driver using ASE. Use this file as a tutorial and template to write your own Crystal Genome Test Driver.
 
 .. note::
-    The comments in this file are written to be rendered using Sphinx-Gallery. Unless you wish to document your Test Driver in the same way, feel free to use a simpler format to comment your code!
-    
-"""
+    The comments in this file are written to be rendered using `Sphinx-Gallery <https://sphinx-gallery.github.io>`_. Unless you wish to document your Test Driver in the same way, feel free to use a simpler format to comment your code!
 
+"""
 
 #!/usr/bin/python
 
-from kim_test_utils import CrystalGenomeTestDriver, query_crystal_genome_structures
-from ase.build import bulk
+from kim_test_utils import CrystalGenomeTestDriver
 from kim_python_utils.ase import get_isolated_energy_per_atom
 from kim_test_utils import get_stoich_reduced_list_from_prototype
 
+# %%
+# You must create a class named ``TestDriver`` inheriting from  :class:`~kim_test_utils.CrystalGenomeTestDriver`.
+# In your ``TestDriver`` class, you must overload the function :func:`~kim_test_utils.CrystalGenomeTestDriver._calculate`. 
+# Besides `self`, the function must also accept ``**kwargs``. Before ``**kwargs``, you may add any additional arguments that 
+# you wish users or the OpenKIM Pipeline to be able to vary. 
+# .. note::
+#   Temperature and stress are commonly used, so they are built-in attributes and do not need to be added as additional arguments: 
+#     *  :attr:`~kim_test_utils.CrystalGenomeTestDriver.temperature_K`
+#     *  :attr:`~kim_test_utils.CrystalGenomeTestDriver.cell_cauchy_stress_eV_angstrom3`
+
 class TestDriver(CrystalGenomeTestDriver):
-    def _calculate(self, example_arg: str, **kwargs):
+    def _calculate(self, nu, **kwargs):
         """
         Example calculate method. Doesn't actually do any calculations, just demonstrates example functionality.
 
@@ -77,6 +85,10 @@ class TestDriver(CrystalGenomeTestDriver):
         self._add_key_to_current_property_instance("binding-potential-energy-per-atom",binding_energy_per_atom,"eV")
         self._add_key_to_current_property_instance("binding-potential-energy-per-formula",binding_energy_per_formula,"eV")
 
+
+from kim_test_utils import query_crystal_genome_structures
+from ase.build import bulk
+
 if __name__ == "__main__":        
     ####################################################
     # if called directly, do some debugging examples
@@ -125,3 +137,5 @@ if __name__ == "__main__":
     # ["P"], "A_mC16_12_2ij"
     # ["P"], "A_oC8_64_f"
     # ["P"], "A_tI4_139_e"
+
+# %%

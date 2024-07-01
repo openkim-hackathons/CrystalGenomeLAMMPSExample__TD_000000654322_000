@@ -2,7 +2,11 @@
 CrystalGenomeASEExample
 =======================
 
-Example usage of the kim-test-utils package to make an ASE test
+Example usage of the kim-test-utils package to make a Crystal Genome Test Driver using ASE. Use this file as a tutorial and template to write your own Crystal Genome Test Driver.
+
+.. note::
+    The comments in this file are written to be rendered using Sphinx-Gallery. Unless you wish to document your Test Driver in the same way, feel free to use a simpler format to comment your code!
+    
 """
 
 

@@ -21,6 +21,9 @@
         "parameter-values.source-value":1,
         "library-prototype-label.source-value":1,
         "short-name.source-value":1,
+        "meta.uuid":1,
+        "instance-id":1,
+        "crystal-genome-material-id.source-value":1,
     },
     "database":"data", "limit":0, "flat":"on"
 }) >@

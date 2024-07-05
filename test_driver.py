@@ -1,89 +1,127 @@
-"""
-CrystalGenomeASEExample
-=======================
-
-Example usage of the kim-test-utils package to make a Crystal Genome Test Driver using ASE. Use this file as a tutorial and template to write your own Crystal Genome Test Driver.
-
-.. note::
-    The comments in this file are written to be rendered using `Sphinx-Gallery <https://sphinx-gallery.github.io>`_. Unless you wish to document your Test Driver in the same way, feel free to use a simpler format to comment your code!
-
-"""
-
 #!/usr/bin/python
 
+"""
+test_driver.py
+==============
+
+Example usage of the :mod:`kim_test_utils` package to make a Crystal Genome Test Driver using ASE. Use this file as a tutorial and template to write your own Crystal Genome Test Driver.
+
+.. note::
+
+    The comments in this file are written to be rendered using `Sphinx-Gallery <https://sphinx-gallery.github.io>`_. Unless you wish to document your Test Driver in the same way, feel free to use a simpler format to comment your code!
+
+You must create a class named ``TestDriver`` inheriting from  :class:`~kim_test_utils.CrystalGenomeTestDriver`.
+In your ``TestDriver`` class, you must overload the function :func:`~kim_test_utils.KIMTestDriver._calculate`. 
+Besides ``self``, the function must also accept ``**kwargs``. Before ``**kwargs``, you may add any additional arguments that 
+you wish users or the OpenKIM Pipeline to be able to vary. 
+
+.. note::
+
+  Temperature and stress are commonly used, so they are built-in attributes and do not need to be added as additional arguments: 
+
+    *  :attr:`~kim_test_utils.CrystalGenomeTestDriver.temperature_K`
+    *  :attr:`~kim_test_utils.CrystalGenomeTestDriver.cell_cauchy_stress_eV_angstrom3`
+
+The ``_calculate`` function implemented below computes the energy vs. volume curve for isotropic expansion and compression of a crystal
+at zero temperature. You can use it as a starting point for your Test Driver. See the comments for explanations. Documentation regarding 
+more complex usage of :mod:`kim_test_utils` can be found below the function definition.
+
+``_calculate`` method
+=====================
+
+"""
+
 from kim_test_utils import CrystalGenomeTestDriver
-from kim_python_utils.ase import get_isolated_energy_per_atom
 from kim_test_utils import get_stoich_reduced_list_from_prototype
 
-# %%
-# You must create a class named ``TestDriver`` inheriting from  :class:`~kim_test_utils.CrystalGenomeTestDriver`.
-# In your ``TestDriver`` class, you must overload the function :func:`~kim_test_utils.CrystalGenomeTestDriver._calculate`. 
-# Besides `self`, the function must also accept ``**kwargs``. Before ``**kwargs``, you may add any additional arguments that 
-# you wish users or the OpenKIM Pipeline to be able to vary. 
-# .. note::
-#   Temperature and stress are commonly used, so they are built-in attributes and do not need to be added as additional arguments: 
-#     *  :attr:`~kim_test_utils.CrystalGenomeTestDriver.temperature_K`
-#     *  :attr:`~kim_test_utils.CrystalGenomeTestDriver.cell_cauchy_stress_eV_angstrom3`
-
 class TestDriver(CrystalGenomeTestDriver):
-    def _calculate(self, nu, **kwargs):
+    def _calculate(self, max_volume_scale: float = 1e-2, num_steps: int = 10, **kwargs):
         """
-        Example calculate method. Doesn't actually do any calculations, just demonstrates example functionality.
-
-        You may add arbitrary arguments, which will be passed to this method when the test driver is invoked.
-
-        You must include **kwargs in the argument list, but you don't have to do anything with it
+        Computes the energy vs. volume curve for isotropic expansion and compression. Example Test Driver demonstrating
+        usage of the kim-test-utils package. 
 
         Args:
-            example_arg:
-                An example argument. This would be an additional variable needed to define your simulation besides the crystal
+            max_volume_scale:
+                Maximum fractional change in volume to investigate
+            num_steps:
+                Number of steps to take in each direction
         """
 
-        ####################################################
-        # ACTUAL CALCULATION BEGINS 
-        ####################################################
-        # calculate potential energy and do the required stuff to figure out per-formula and per-atom, and subtract isolated energy
-        potential_energy = self.atoms.get_potential_energy()
-        potential_energy_per_atom = potential_energy/len(self.atoms)
-        reduced_stoichiometry = get_stoich_reduced_list_from_prototype(self.prototype_label) # i.e. "AB3\_...." -> [1,3]        
-        binding_energy_per_formula = potential_energy_per_atom * sum(reduced_stoichiometry)
-        for num_in_formula,species in zip(reduced_stoichiometry,self.stoichiometric_species):
-            binding_energy_per_formula -= num_in_formula*get_isolated_energy_per_atom(self.kim_model_name,species)
-        binding_energy_per_atom = binding_energy_per_formula/sum(reduced_stoichiometry)
-        print("I was passed the following string argument as an example:\n\n%s\n\n"%example_arg)
-        ####################################################
-        # ACTUAL CALCULATION ENDS 
-        ####################################################
+        # The base class provides self.atoms, an ase.Atoms object representing the initial configuration of the crystal.
+        # Use this configuration to evaluate the material property of interest
+        original_cell = self.atoms.get_cell()
+        num_atoms = len(self.atoms)
 
-        ####################################################
-        # SOME USAGE EXAMPLES NOT NECESSARY FOR THE PRESENT TEST 
-        ####################################################
-        # If your self.atoms object has changed, this is how you update the Crystal Genome designation in your class instance:
-        self._update_crystal_genome_designation_from_atoms()
+        # Besides temperature, stress, and atoms, you may wish to access other attributes of the base class for information about 
+        # the material, such as its symmetry-reduced AFLOW prototype label. Here we use it to get information about the stoichiometry of the crystal.
+        # See the documentation below this method definition and the API documentation for CrystalGenomeTestDriver for more information.
+        num_atoms_in_formula = sum(get_stoich_reduced_list_from_prototype(self.prototype_label))
 
-        # If you just need to check that the symmetry hasn't changed without re-writing the Crystal Genome designation, do this:
-        # Triclinic and monoclinic crystals may not be able to be matched perfectly, there is an option for loose matching (False by default)
-        self._get_crystal_genome_designation_from_atoms_and_verify_unchanged_symmetry(loose_triclinic_and_monoclinic=True)
+        binding_potential_energy_per_atom = []
+        binding_potential_energy_per_formula = []
+        volume_per_atom = []
+        volume_per_formula = []
+        step_size = max_volume_scale/num_steps
 
-        # You can also check the symmetry of a passed atoms object
-        atoms = self.atoms
-        # Let's pretend we did something, like MD with LAMMPS
-        # This is only meant to work with unit cells or small supercells, 
-        # if you pass this function a large supercell, it will be intractably slow!
-        self._get_crystal_genome_designation_from_atoms_and_verify_unchanged_symmetry(atoms)
-        ####################################################
-        # USAGE EXAMPLES END
-        ####################################################
+        for i in range(-num_steps,num_steps+1):
+            self.atoms.set_cell(original_cell*step_size*i,scale_atoms=True)
+            volume = self.atoms.get_volume()
+            current_volume_per_atom = volume/num_atoms
 
-        ####################################################
-        # PROPERTY WRITING
-        ####################################################
-        # add property instance and automatically pre-fill it with common Crystal Genome keys
-        self._add_property_instance_and_common_crystal_genome_keys("binding-energy-crystal",write_stress=False, write_temp=False)
+            problem_occurred = False
+            try:
+                # The self.atoms object comes pre-initialized with the calculator set to the interatomic model
+                # the Test Driver was called with. If you need to access the name of the KIM model (for example,
+                # if you are exporting the atomic configuration to run an external simulator like LAMMPS), it can
+                # be accessed at self.kim_model_name
+                potential_energy = self.atoms.get_potential_energy()                
+            except:
+                problem_occurred = True
+            
+            if not problem_occurred:
+                current_binding_potential_energy_per_atom = potential_energy/num_atoms
+                volume_per_atom.append(current_volume_per_atom)
+                volume_per_formula.append(current_volume_per_atom*num_atoms_in_formula)
+                binding_potential_energy_per_atom.append(current_binding_potential_energy_per_atom)
+                binding_potential_energy_per_formula.append(current_binding_potential_energy_per_atom*num_atoms_in_formula)
+                disclaimer = None
+            else:
+                disclaimer = "At least one of the requested deformations of the unit cell failed to compute a potential energy."
 
-        # add the fields unique to this property
-        self._add_key_to_current_property_instance("binding-potential-energy-per-atom",binding_energy_per_atom,"eV")
-        self._add_key_to_current_property_instance("binding-potential-energy-per-formula",binding_energy_per_formula,"eV")
+        # Now it is time to write the output in the format you created in your Property Definition. The base class provides utility methods
+        # to facilitate this process.
+        
+        # This method initializes the Property Instance and adds the keys common to all Crystal Genome properties.
+        # property_name can be the full "property-id" field in your Property Definition, or the "Property Name",
+        # which is just the short name after the slash, as used here. You can also specify whether your property
+        # includes stress and temperature (no by default), and have the option to specify a disclaimer.
+        self._add_property_instance_and_common_crystal_genome_keys("energy-vs-volume-isotropic-crystal",
+                                                                   write_stress=False, write_temp=False, disclaimer=disclaimer)
+
+        # This method adds additional fields to your property instance by specifying the key names you defined
+        # in your property definition and providing units if necessary.
+        self._add_key_to_current_property_instance("volume-per-atom",volume_per_atom,
+                                                   units="angstrom^3")
+        self._add_key_to_current_property_instance("volume-per-formula",volume_per_formula,
+                                                   units="angstrom^3")
+
+        # You may also provide a dictionary supplying uncertainty information. It is optional, and normally
+        # would not be reported for a deterministic calculation like this, only one involving some statistics,
+        # such as molecular dynamics or fitting. There are many possible ways to report uncertainty information,
+        # detailed at https://openkim.org/doc/schema/properties-framework/
+        uncertainty_info = {
+            "source-std-uncert-value": [0]*len(binding_potential_energy_per_atom)
+        }
+        self._add_key_to_current_property_instance("binding-potential-energy-per-atom",binding_potential_energy_per_atom,
+                                                   units="eV",uncertainty_info=uncertainty_info)
+        self._add_key_to_current_property_instance("binding-potential-energy-per-formula",binding_potential_energy_per_formula,
+                                                   units="eV",uncertainty_info=uncertainty_info)
+        
+        # If your Test Driver reports multiple Property Instances, repeat the process above for each one.
+
+# %%
+# See the code and comments for usage examples of the various functions of the :class:`~kim_test_utils.CrystalGenomeTestDriver`.
+# Click on the link to see full API documentation of the class and its members.
 
 
 from kim_test_utils import query_crystal_genome_structures

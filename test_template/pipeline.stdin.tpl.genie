@@ -2,6 +2,8 @@
 @< MODELNAME >@
 {{stoichiometric_species}}
 {{prototype_label}}
+{{temperature_K}}
+{{cell_cauchy_stress_eV_angstrom3}}
 @< query({
     "query": {
         "meta.type":"tr",
@@ -23,7 +25,7 @@
         "short-name.source-value":1,
         "meta.uuid":1,
         "instance-id":1,
-        "crystal-genome-material-id.source-value":1,
+        "crystal-genome-source-structure-id.source-value":1,
     },
     "database":"data", "limit":0, "flat":"on"
 }) >@

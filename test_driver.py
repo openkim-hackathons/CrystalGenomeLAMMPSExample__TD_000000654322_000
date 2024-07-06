@@ -62,9 +62,14 @@ class TestDriver(CrystalGenomeTestDriver):
         volume_per_atom = []
         volume_per_formula = []
         step_size = max_volume_scale/num_steps
+        disclaimer = None
+
+        print('\nPerforming energy scan...\n')
 
         for i in range(-num_steps,num_steps+1):
-            self.atoms.set_cell(original_cell*step_size*i,scale_atoms=True)
+            volume_scale = 1 + step_size*i
+            linear_scale = volume_scale ** (1/3)
+            self.atoms.set_cell(original_cell*linear_scale,scale_atoms=True)
             volume = self.atoms.get_volume()
             current_volume_per_atom = volume/num_atoms
 
@@ -75,8 +80,11 @@ class TestDriver(CrystalGenomeTestDriver):
                 # if you are exporting the atomic configuration to run an external simulator like LAMMPS), it can
                 # be accessed at self.kim_model_name
                 potential_energy = self.atoms.get_potential_energy()                
+                print('Volume: %5.5f Energy: %5.5f'%(volume,potential_energy))
             except:
+                print('Failed to get energy at volume %f'%volume)
                 problem_occurred = True
+                disclaimer = "At least one of the requested deformations of the unit cell failed to compute a potential energy."                
             
             if not problem_occurred:
                 current_binding_potential_energy_per_atom = potential_energy/num_atoms
@@ -84,9 +92,6 @@ class TestDriver(CrystalGenomeTestDriver):
                 volume_per_formula.append(current_volume_per_atom*num_atoms_in_formula)
                 binding_potential_energy_per_atom.append(current_binding_potential_energy_per_atom)
                 binding_potential_energy_per_formula.append(current_binding_potential_energy_per_atom*num_atoms_in_formula)
-                disclaimer = None
-            else:
-                disclaimer = "At least one of the requested deformations of the unit cell failed to compute a potential energy."
 
         # Now it is time to write the output in the format you created in your Property Definition. The base class provides utility methods
         # to facilitate this process.

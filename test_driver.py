@@ -28,7 +28,8 @@ class TestDriver(CrystalGenomeTestDriver):
 
         # Besides temperature, stress, and atoms, you may wish to access other attributes of the base class for information about 
         # the material, such as its symmetry-reduced AFLOW prototype label. Here we use it to get information about the stoichiometry of the crystal.
-        # See the documentation below this method definition and the API documentation for CrystalGenomeTestDriver for more information.
+        # See the API documentation for CrystalGenomeTestDriver for more information:
+        # https://kim-test-utils.readthedocs.io/en/latest/kim_test_utils.html#kim_test_utils.CrystalGenomeTestDriver
         num_atoms_in_formula = sum(get_stoich_reduced_list_from_prototype(self.prototype_label))
 
         binding_potential_energy_per_atom = []

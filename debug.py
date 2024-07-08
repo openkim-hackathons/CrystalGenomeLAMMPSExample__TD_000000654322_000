@@ -44,7 +44,7 @@ test_driver = TestDriver(kim_model_name)
 ###############################################################################
 # Testing Using an :class:`~ase.Atoms` Object
 # ===========================================
-
+#
 # You can test your Driver by directly passing it an :class:`ase.Atoms` object. The base :class:`~kim_test_utils.CrystalGenomeTestDriver`
 # (actually, its base :class:`~kim_test_utils.KIMTestDriver`) provides the option to ``optimize`` (``False`` by default) the atomic positions
 # and lattice vectors before running the simulation. The base class will automatically perform a symmetry analysis on the structure and populate

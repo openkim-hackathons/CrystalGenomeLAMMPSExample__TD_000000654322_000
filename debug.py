@@ -47,8 +47,8 @@ test_driver = TestDriver(kim_model_name)
 
 # You can test your Driver by directly passing it an :class:`ase.Atoms` object. The base :class:`~kim_test_utils.CrystalGenomeTestDriver`
 # (actually, its base :class:`~kim_test_utils.KIMTestDriver`) provides the option to ``optimize`` (``False`` by default) the atomic positions
-# and lattice vectors before running the simulation. The base class will automatically perform a symmetry analysis on the strucutre and populate
-# the common Crystal Genome fields. Let's build a bulk Wurtzite Structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale`` 
+# and lattice vectors before running the simulation. The base class will automatically perform a symmetry analysis on the structure and populate
+# the common Crystal Genome fields. Let's build a bulk wurtzite structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale`` 
 # to 0.1 and leaving the other argument as default. We are also demonstrating how to pass temperature and stress, even if our Test Driver doesn't use it.
 from ase.build import bulk
 atoms = bulk('ZnS','wurtzite',a=3.8)

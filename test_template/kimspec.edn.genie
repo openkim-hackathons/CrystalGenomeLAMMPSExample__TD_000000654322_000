@@ -1,6 +1,6 @@
 {
-  "title" "Energy vs. volume scan under fractional isometric expansion/contraction of +-{{crystal_genome_test_args.max_volume_scale}} for {{species|join("")}} in AFLOW crystal prototype {{prototype_label}} v000"
-  "description" "Performs an energy vs. volume scan under isometric expansion/contraction of +-{{crystal_genome_test_args.max_volume_scale}} for {{species|join("")}} in AFLOW crystal prototype {{prototype_label}}. Energies and volumes are reported normalized both per-atom and per-formula."
+  "title" "Energy vs. volume scan under fractional isometric expansion/contraction of +-{{crystal_genome_test_args.max_volume_scale}} for {{stoichiometric_species|join("")}} in AFLOW crystal prototype {{prototype_label}} v000"
+  "description" "Performs an energy vs. volume scan under isometric expansion/contraction of +-{{crystal_genome_test_args.max_volume_scale}} for {{stoichiometric_species|join("")}} in AFLOW crystal prototype {{prototype_label}}. Energies and volumes are reported normalized both per-atom and per-formula."
   "extended-id" "{{TEST_DRIVER_NAME.split('_')[:-4]|join('_')}}_{{prototype_label}}_{{stoichiometric_species|join("")}}_{{crystal_genome_test_args.max_volume_scale|replace('.','_')}}__TE_{{kimnum}}_000"
   "test-driver" "{{TEST_DRIVER_NAME}}"
   "species" ["{{stoichiometric_species|join('" "')}}"]

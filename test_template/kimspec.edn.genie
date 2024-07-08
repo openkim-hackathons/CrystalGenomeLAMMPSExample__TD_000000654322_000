@@ -1,9 +1,16 @@
 {
-  "extended-id" "{{TEST_DRIVER_NAME.split('_')[:-4]|join('_')}}_{{prototype_label}}_{{stoichiometric_species|join("")}}__TE_{{kimnum}}_000"
+  "title" "Energy vs. volume scan under fractional isometric expansion/contraction of +-{{crystal_genome_test_args.max_volume_scale}} for {{species|join("")}} in AFLOW crystal prototype {{prototype_label}} v000"
+  "description" "Performs an energy vs. volume scan under isometric expansion/contraction of +-{{crystal_genome_test_args.max_volume_scale}} for {{species|join("")}} in AFLOW crystal prototype {{prototype_label}}. Energies and volumes are reported normalized both per-atom and per-formula."
+  "extended-id" "{{TEST_DRIVER_NAME.split('_')[:-4]|join('_')}}_{{prototype_label}}_{{stoichiometric_species|join("")}}_{{crystal_genome_test_args.max_volume_scale|replace('.','_')}}__TE_{{kimnum}}_000"
   "test-driver" "{{TEST_DRIVER_NAME}}"
-  "kim-api-version" "2.3"
+  "species" ["{{stoichiometric_species|join('" "')}}"]
+  "developer" ["4ad03136-ed7f-4316-b586-1e94ccceb311"]
+  "contributor-id" "4ad03136-ed7f-4316-b586-1e94ccceb311"
+  "maintainer-id" "4ad03136-ed7f-4316-b586-1e94ccceb311"
   "executables" ["runner"]
   "domain" "openkim.org"
   "matching-models" ["standard-models"]
-  "species" ["{{stoichiometric_species|join('" "')}}"]
+  "disclaimer" "Computer generated"
+  "kim-api-version" "2.3"
+  "publication-year" "2024"
 }{# FILENAME = kimspec.edn #}

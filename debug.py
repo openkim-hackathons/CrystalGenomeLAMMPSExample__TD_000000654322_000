@@ -20,7 +20,8 @@ Examples for how to do that are found in this file, ``debug.py`` from |example_u
 Everything you need to run this file is containerized in the :ref:`doc.KDP`,
 or alternatively will be installed if you follow the :ref:`doc.standalone_installation`.
 
-We will use a model from OpenKIM.org to test our Driver. The KIM Model needs to first be installed using 
+We will use a model from OpenKIM.org to test our Driver. The KIM Model needs to first be installed the following command
+(in your shell, not in Python):
 
 .. code-block:: bash
 

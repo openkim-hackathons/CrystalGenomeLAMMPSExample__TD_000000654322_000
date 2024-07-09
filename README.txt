@@ -1,4 +1,4 @@
 CrystalGenomeASEExample
 =======================
 
-Example usage of the kim-test-utils package to make an ASE test
+Example usage of the kim-tools package to make an ASE test

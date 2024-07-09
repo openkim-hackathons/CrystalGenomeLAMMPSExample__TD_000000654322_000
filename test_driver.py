@@ -2,12 +2,12 @@
 Example OpenKIM Crystal Genome Test Driver
 ==========================================
 
-This is an example demonstrating usage of the kim-test-utils package. See https://kim-test-utils.readthedocs.io for more information.
+This is an example demonstrating usage of the kim-tools package. See https://kim-tools.readthedocs.io for more information.
 
 """
 
-from kim_test_utils import CrystalGenomeTestDriver
-from kim_test_utils import get_stoich_reduced_list_from_prototype
+from kim_tools import CrystalGenomeTestDriver
+from kim_tools import get_stoich_reduced_list_from_prototype
 
 class TestDriver(CrystalGenomeTestDriver):
     def _calculate(self, max_volume_scale: float = 1e-2, num_steps: int = 10, **kwargs):
@@ -29,7 +29,7 @@ class TestDriver(CrystalGenomeTestDriver):
         # Besides temperature, stress, and atoms, you may wish to access other attributes of the base class for information about 
         # the material, such as its symmetry-reduced AFLOW prototype label. Here we use it to get information about the stoichiometry of the crystal.
         # See the API documentation for CrystalGenomeTestDriver for more information:
-        # https://kim-test-utils.readthedocs.io/en/latest/kim_test_utils.html#kim_test_utils.CrystalGenomeTestDriver
+        # https://kim-tools.readthedocs.io/en/latest/kim_tools.html#kim_tools.CrystalGenomeTestDriver
         num_atoms_in_formula = sum(get_stoich_reduced_list_from_prototype(self.prototype_label))
 
         binding_potential_energy_per_atom = []

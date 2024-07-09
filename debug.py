@@ -8,8 +8,13 @@ Testing and Debugging Your Crystal Genome Test Driver
 .. note::
 
     This Python file has comments written to be rendered using `Sphinx-Gallery <https://sphinx-gallery.github.io>`_ as part
-    of the `documentation for the kim-test-utils package <https://kim-test-utils.readthedocs.io>`_. 
-    A rendered version of this file should be available as part of that documentation.
+    of the `documentation for the kim-tools package <https://kim-tools.readthedocs.io>`_. 
+    A rendered version of this file should be available as part of that documentation. The rendered documentation
+    is contained entirely in the comments, so this file can be run just like any other Python file from your shell, e.g. 
+
+    .. code-block:: bash
+
+        python CrystalGenomeASEExample__TD_000000654321_000/debug.py
     
 When your Test Driver is integrated into the OpenKIM Processing Pipeline, the auxiliary files supplied with your
 Test Driver will be used to pass inputs and parse outputs from the calculation you have implemented in ``test_driver.py``.
@@ -18,7 +23,7 @@ here: :doc:`../../tutorial_pipeline`, however it is likely that you will first w
 
 Examples for how to do that are found in this file, ``debug.py`` from |example_url|. 
 Everything you need to run this file is containerized in the :ref:`doc.KDP`,
-or alternatively will be installed if you follow the :ref:`doc.standalone_installation`.
+or alternatively will be installed if you follow the :ref:`doc.standalone_installation`. 
 
 We will use a model from OpenKIM.org to test our Driver. The KIM Model needs to first be installed the following command
 (in your shell, not in Python):
@@ -46,8 +51,8 @@ test_driver = TestDriver(kim_model_name)
 # Testing Using an :class:`~ase.Atoms` Object
 # ===========================================
 #
-# You can test your Driver by directly passing it an :class:`ase.Atoms` object. The base :class:`~kim_test_utils.CrystalGenomeTestDriver`
-# (actually, its base :class:`~kim_test_utils.KIMTestDriver`) provides the option to ``optimize`` (``False`` by default) the atomic positions
+# You can test your Driver by directly passing it an :class:`ase.Atoms` object. The base :class:`~kim_tools.CrystalGenomeTestDriver`
+# (actually, its base :class:`~kim_tools.KIMTestDriver`) provides the option to ``optimize`` (``False`` by default) the atomic positions
 # and lattice vectors before running the simulation. The base class will automatically perform a symmetry analysis on the structure and populate
 # the common Crystal Genome fields. Let's build a bulk wurtzite structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale`` 
 # to 0.1 and leaving the other argument as default. We are also demonstrating how to pass temperature and stress, even if our Test Driver doesn't use it.
@@ -89,10 +94,10 @@ test_driver.write_property_instances_to_file()
 # the pipeline will pass a set of keyword arguments containing the symmetry-reduced
 # AFLOW prototype description of the crystal. The base class will then
 # construct ``self.atoms``. You can replicate this functionality using
-# the utility method :func:`kim_test_utils.query_crystal_genome_structures` 
+# the utility method :func:`kim_tools.query_crystal_genome_structures` 
 # to query for relaxed structures:
 
-from kim_test_utils import query_crystal_genome_structures
+from kim_tools import query_crystal_genome_structures
 list_of_queried_structures = query_crystal_genome_structures(
     kim_model_name=kim_model_name,
     stoichiometric_species=['Zn','S'],
@@ -117,7 +122,7 @@ list_of_queried_structures = query_crystal_genome_structures(
 # 
 # A single set of the arguments given above (model, species, and AFLOW prototype label)
 # may or may not correspond to multiple local minima (i.e. multiple sets of free parameters),
-# so :func:`kim_test_utils.query_crystal_genome_structures` returns a list of 
+# so :func:`kim_tools.query_crystal_genome_structures` returns a list of 
 # dictionaries. You can then run your ``TestDriver`` by passing one of these
 # dictionaries as keyword arguments instead of an :class:`ase.Atoms` object. 
 # Do not use the ``optimize`` option.

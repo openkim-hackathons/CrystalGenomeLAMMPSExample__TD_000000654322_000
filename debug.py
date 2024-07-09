@@ -41,6 +41,13 @@ or (KDP only)
 more models can be found at https://openkim.org/browse/models/by-species, just replace the model name in the above
 commands and it will be automatically downloaded and installed.
 
+If you have not yet done so, you must also use the ``add_or_update_property`` command-line tool packaged with ``kim-tools``
+to add any custom properties:
+
+.. code-block:: bash
+
+    add_or_update_property ~/test-drivers/CrystalGenomeASEExample__TD_000000654321_000/local-props/energy-vs-volume-isotropic-crystal.edn
+
 First, import your Test Driver and instantiate it by passing it a KIM Model Name:
 """
 from test_driver import TestDriver

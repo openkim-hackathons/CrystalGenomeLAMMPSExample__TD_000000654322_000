@@ -4,7 +4,6 @@
   "extended-id" "{{TEST_DRIVER_NAME.split('_')[:-4]|join('_')}}_{{prototype_label}}_{{stoichiometric_species|join("")}}_{{crystal_genome_test_args.max_volume_scale|replace('.','_')}}__TE_{{kimnum}}_000"
   "test-driver" "{{TEST_DRIVER_NAME}}"
   "species" ["{{stoichiometric_species|join('" "')}}"]
-  "developer" ["4ad03136-ed7f-4316-b586-1e94ccceb311"]
   "contributor-id" "4ad03136-ed7f-4316-b586-1e94ccceb311"
   "maintainer-id" "4ad03136-ed7f-4316-b586-1e94ccceb311"
   "executables" ["runner"]

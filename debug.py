@@ -50,7 +50,7 @@ to add any custom properties:
 
 First, import your Test Driver and instantiate it by passing it a KIM Model Name:
 """
-from test_driver import TestDriver
+from test_driver.test_driver import TestDriver
 kim_model_name = "SW_ZhouWardMartin_2013_CdTeZnSeHgS__MO_503261197030_003"
 test_driver = TestDriver(kim_model_name)
 

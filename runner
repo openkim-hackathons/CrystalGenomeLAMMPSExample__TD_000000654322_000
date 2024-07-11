@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from test_driver import TestDriver
+from test_driver.test_driver import TestDriver
 from ast import literal_eval
 
 test_level_optional_inputs = {}

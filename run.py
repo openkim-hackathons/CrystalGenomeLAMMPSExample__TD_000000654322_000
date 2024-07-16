@@ -1,9 +1,8 @@
 #!/usr/bin/python
 
 """
-=====================================================
-Testing and Debugging Your Crystal Genome Test Driver
-=====================================================
+Invoking a Crystal Genome Test Driver Directly
+==============================================
 
 .. note::
 
@@ -14,25 +13,17 @@ Testing and Debugging Your Crystal Genome Test Driver
 
     .. code-block:: bash
 
-        python CrystalGenomeASEExample__TD_000000654321_000/debug.py
+        python CrystalGenomeASEExample__TD_000000654321_000/run.py
     
-When your Test Driver is integrated into the OpenKIM Processing Pipeline, the auxiliary files supplied with your
-Test Driver will be used to pass inputs and parse outputs from the calculation you have implemented in ``test_driver.py``.
-This functionality is also available for testing in the KIM Developer Platform. More information about this is avalable
-here: :doc:`../../tutorial_pipeline`, however it is likely that you will first wish to test your Driver by invoking it directly.
-
-Examples for how to do that are found in this file, ``debug.py`` from |example_url|. 
-Everything you need to run this file is containerized in the :ref:`doc.KDP`,
-or alternatively will be installed if you follow the :ref:`doc.standalone_installation`. 
-
-We will use a model from OpenKIM.org to test our Driver. The KIM Model needs to first be installed the following command
-(in your shell, not in Python):
+We will use a model from OpenKIM.org to run our Driver. For this, `kimpy <https://github.com/openkim/kimpy>`_
+must be installed (see Note below regarding using non-KIM ASE calculators). The KIM Model needs to first be installed 
+using the following command (in your shell, not in Python):
 
 .. code-block:: bash
 
     kim-api-collections-management install user SW_ZhouWardMartin_2013_CdTeZnSeHgS__MO_503261197030_003
 
-or (KDP only)
+or (`KIM Developer Platform <https://openkim.org/doc/evaluation/kim-developer-platform/>`_ only)
 
 .. code-block:: bash
 
@@ -41,13 +32,6 @@ or (KDP only)
 more models can be found at https://openkim.org/browse/models/by-species, just replace the model name in the above
 commands and it will be automatically downloaded and installed.
 
-If you have not yet done so, you must also use the ``add_or_update_property`` command-line tool packaged with ``kim-tools``
-to add any custom properties:
-
-.. code-block:: bash
-
-    add_or_update_property ~/test-drivers/CrystalGenomeASEExample__TD_000000654321_000/local-props/energy-vs-volume-isotropic-crystal.edn
-
 First, import your Test Driver and instantiate it by passing it a KIM Model Name:
 """
 from test_driver.test_driver import TestDriver
@@ -55,10 +39,17 @@ kim_model_name = "SW_ZhouWardMartin_2013_CdTeZnSeHgS__MO_503261197030_003"
 test_driver = TestDriver(kim_model_name)
 
 ###############################################################################
-# Testing Using an :class:`~ase.Atoms` Object
-# ===========================================
+# .. note::
 #
-# You can test your Driver by directly passing it an :class:`ase.Atoms` object. The base :class:`~kim_tools.CrystalGenomeTestDriver`
+#   If the Test Driver uses only ASE for computations, you can use any ASE calculator,
+#   not just KIM models. Simply instantiate the ``TestDriver`` class by passing it
+#   the :class:`~ase.calculators.calculator.Calculator` instance you wish to use instead
+#   of the string identifying the KIM model.
+#
+# Running Using an :class:`~ase.Atoms` Object
+# -------------------------------------------
+#
+# You can run your Driver by directly passing it an :class:`ase.Atoms` object. The base :class:`~kim_tools.CrystalGenomeTestDriver`
 # (actually, its base :class:`~kim_tools.KIMTestDriver`) provides the option to ``optimize`` (``False`` by default) the atomic positions
 # and lattice vectors before running the simulation. The base class will automatically perform a symmetry analysis on the structure and populate
 # the common Crystal Genome fields. Let's build a bulk wurtzite structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale`` 
@@ -69,15 +60,15 @@ atoms = bulk('ZnS','wurtzite',a=3.8)
 print ('\nRUNNING TEST DRIVER ON WURTZITE ATOMS OBJECT\n')
 test_driver(atoms,optimize=True,max_volume_scale=0.1,temperature_K=0,cell_cauchy_stress_eV_angstrom3=[0,0,0,0,0,0])
 ###############################################################################
-# You can now access the results of the calculation in the format defined by your Property Definition 
-# and the `KIM Properties Framework <https://openkim.org/doc/schema/properties-framework/>`_. 
+# You can now access the results of the calculation in the format defined by the Property Definitions
+# that the Driver uses and the `KIM Properties Framework <https://openkim.org/doc/schema/properties-framework/>`_. 
 # It can be accessed as a list of dictionaries, each corresponding to a Property Instance. 
 # Each caclulation may produce multiple Property Instances, and any additional calls to 
 # ``test_driver`` will append to this list. 
 #
 # This is how you access the value of the key ``a`` (corresponding to the lattice constant), 
 # found in every Crystal Genome property, from the first Property Instance. You can access the 
-# keys you defined in your Property Definition in the same way.
+# other keys in the same way.
 print('\n--------------------------------------')
 print('Lattice constant a: %f %s'%(
     test_driver.property_instances[0]['a']['source-value'],
@@ -92,7 +83,7 @@ test_driver.write_property_instances_to_file()
 # Testing Using a Prototype Label
 # =============================== 
 #
-# In the KIM Processing Pipeline, your ``TestDriver`` will automatically run
+# In the KIM Processing Pipeline, Test Drivers automatically run
 # on of thousands of different crystal structures under the Crystal Genome 
 # testing framework. These are precomputed relaxations 
 # of each structure with each compatible interatomic potential in OpenKIM. 
@@ -124,8 +115,7 @@ list_of_queried_structures = query_crystal_genome_structures(
 #   We will add support for finite temperature and stress queries in the future.
 # 
 # A detailed description of AFLOW prototype labels can be found in
-# Part IIB of https://arxiv.org/abs/2401.06875. A practical guide for testing your
-# Driver on a variety of crystal structures is found lower on this page.
+# Part IIB of https://arxiv.org/abs/2401.06875. 
 # 
 # A single set of the arguments given above (model, species, and AFLOW prototype label)
 # may or may not correspond to multiple local minima (i.e. multiple sets of free parameters),
@@ -140,25 +130,3 @@ for queried_structure in list_of_queried_structures:
 
 ###############################################################################
 # Remember that this will append the results to ``test_driver.property_instances``.
-#
-# Curated Set of Test Cases
-# -------------------------
-# 
-# Because your Test Driver will run on a wide variety of crystals and interatomic potentials, 
-# it is important to test it on a diverse selection of both. Below is a curated table
-# of test cases that you can query for. These are arranged in increasing symmetry order
-# (from triclinic to cubic).
-# 
-# You can explore more prototypes at 
-# http://aflow.org/prototype-encyclopedia/, but it is not guaranteed that OpenKIM
-# will have results or a compatible interatomic potential 
-# (https://openkim.org/browse/models/by-species).
-#
-# Every time you use a new model, you will need to install the model and re-instantiate
-# your ``TestDriver`` class.
-#
-# .. csv-table:: 
-#    :header-rows: 1
-#    :file: ../../structure_table.csv
-#    :widths: 10, 10, 40, 40
-#    :delim: tab

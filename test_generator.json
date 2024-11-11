@@ -1,4 +1,5 @@
-
+{"stoichiometric_species": ["Ag"], "prototype_label": "A_cF4_225_a", "temperature_K": 0, "cell_cauchy_stress_eV_angstrom3": [0, 0, 0, 0, 0, 0], "crystal_genome_test_args":  {"max_volume_scale": 0.1}}
+{"stoichiometric_species": ["Ag"], "prototype_label": "A_hP2_194_c", "parameter_names": ["c/a"], "temperature_K": 0, "cell_cauchy_stress_eV_angstrom3": [0, 0, 0, 0, 0, 0], "crystal_genome_test_args":  {"max_volume_scale": 0.1}}
 {"stoichiometric_species": ["Ag"], "prototype_label": "A_hP4_194_ac", "parameter_names": ["c/a"], "temperature_K": 0, "cell_cauchy_stress_eV_angstrom3": [0, 0, 0, 0, 0, 0], "crystal_genome_test_args":  {"max_volume_scale": 0.1}}
 {"stoichiometric_species": ["Ag", "O"], "prototype_label": "A2B_cP6_224_b_a", "temperature_K": 0, "cell_cauchy_stress_eV_angstrom3": [0, 0, 0, 0, 0, 0], "crystal_genome_test_args":  {"max_volume_scale": 0.1}}
 {"stoichiometric_species": ["Ag", "O"], "prototype_label": "A2B_hP3_164_d_a", "parameter_names": ["c/a", "z2"], "temperature_K": 0, "cell_cauchy_stress_eV_angstrom3": [0, 0, 0, 0, 0, 0], "crystal_genome_test_args":  {"max_volume_scale": 0.1}}

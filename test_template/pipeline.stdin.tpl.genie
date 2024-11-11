@@ -1,9 +1,11 @@
 @< path("{{TEST_DRIVER_NAME}}") >@ {# FILENAME = pipeline.stdin.tpl #}
 @< MODELNAME >@
-{{stoichiometric_species}}
+{{stoichiometric_species|join(' ')}}
 {{prototype_label}}
+{{parameter_names|join(' ')}}
 {{temperature_K}}
-{{cell_cauchy_stress_eV_angstrom3}}
+{{cell_cauchy_stress_eV_angstrom3|join(' ')}}
+{% if parameter_sets is not defined -%}
 @< query({
     "query": {
         "meta.type":"tr",
@@ -19,7 +21,6 @@
     },
     "fields":{
         "a.si-value":1,
-        "parameter-names.source-value":1,
         "parameter-values.source-value":1,
         "library-prototype-label.source-value":1,
         "short-name.source-value":1,
@@ -29,4 +30,7 @@
     },
     "database":"data", "limit":0, "flat":"on"
 }) >@
+{% else -%}
+{{parameter_sets}}
+{% endif -%}
 {{crystal_genome_test_args}}

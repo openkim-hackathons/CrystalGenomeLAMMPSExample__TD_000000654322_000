@@ -1,28 +1,36 @@
 #!/usr/bin/env python3
 
+"""
+Universal runner for Crystal Genome Tests.
+"""
+
 from test_driver.test_driver import TestDriver
 from ast import literal_eval
 
 test_level_optional_inputs = {}
 model_name = input('Model name?\n')
 print(model_name)
-stoichiometric_species = literal_eval(input('Stoichiometric species (literal list of strings)?\n'))
+stoichiometric_species = input('Stoichiometric species (literal list of strings)?\n').split()
 print(stoichiometric_species)
 prototype_label = input('Prototype label?\n')
 print(prototype_label)
+parameter_names = input('Parameter names?\n').split()
+if parameter_names != []:    
+    print(parameter_names)
+    test_level_optional_inputs['parameter_names'] = parameter_names
 temperature_K = input('Temperature (K)?\n')
 if temperature_K != '':
     print(temperature_K)
     test_level_optional_inputs['temperature_K'] = int(temperature_K)
 else:
     print('No temperature given')
-cell_cauchy_stress_eV_angstrom3 = input('Cauchy stress (literal list of floats, Voigt order xx,yy,zz,yz,xz,xy, eV/A^3)?\n')
-if cell_cauchy_stress_eV_angstrom3 != '':
+cell_cauchy_stress_eV_angstrom3 = input('Cauchy stress (literal list of floats, Voigt order xx,yy,zz,yz,xz,xy, eV/A^3)?\n').split()
+if cell_cauchy_stress_eV_angstrom3 != []:
     print(cell_cauchy_stress_eV_angstrom3)
-    test_level_optional_inputs['cell_cauchy_stress_eV_angstrom3'] = literal_eval(cell_cauchy_stress_eV_angstrom3)
+    test_level_optional_inputs['cell_cauchy_stress_eV_angstrom3'] = cell_cauchy_stress_eV_angstrom3
 else:
     print('No stress given')
-query_result = literal_eval(input('Query result (literal list of dicts)?\n'))
+query_result = literal_eval(input('Initial parameters from query or test_generator (literal list of dicts)?\n'))
 print(query_result)
 runtime_args = literal_eval(input('Runtime arguments (literal dictonary)?\n'))
 print(runtime_args)
@@ -31,11 +39,10 @@ test = TestDriver(model_name)
 # driver know what to evaluate the property at, the query is always for 0K 0bar
 for query_element in query_result:
     structure_level_optional_inputs = test_level_optional_inputs
+    # can't use project on the query, because some entries might be missing    
     parameter_values_angstrom = [query_element['a.si-value']*1e10]
     if 'parameter-values.source-value' in query_element:
         parameter_values_angstrom += query_element['parameter-values.source-value']
-    if 'parameter-names.source-value' in query_element:
-        structure_level_optional_inputs['parameter_names'] = query_element['parameter-names.source-value']
     if 'library-prototype-label.source-value' in query_element:
         structure_level_optional_inputs['library_prototype_label'] = query_element['library-prototype-label.source-value']
     if 'short-name.source-value' in query_element:
@@ -45,8 +52,10 @@ for query_element in query_result:
         structure_level_optional_inputs['short_name'] = short_name
     if 'crystal-genome-source-structure-id.source-value' in query_element:
         crystal_genome_source_structure_id = query_element['crystal-genome-source-structure-id.source-value']
-    else:
+    elif 'meta.uuid' in query_element and 'instance-id' in query_element:
         crystal_genome_source_structure_id = [query_element['meta.uuid']+':'+str(query_element['instance-id'])]
+    else: # This query must be being spoofed e.g. for an initial relaxation test
+        crystal_genome_source_structure_id = None
     test(
         stoichiometric_species = stoichiometric_species,
         prototype_label = prototype_label,

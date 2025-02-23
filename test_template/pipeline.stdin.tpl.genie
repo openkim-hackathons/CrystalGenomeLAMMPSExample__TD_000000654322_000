@@ -1,8 +1,5 @@
 @< path("{{TEST_DRIVER_NAME}}") >@ {# FILENAME = pipeline.stdin.tpl #}
 @< MODELNAME >@
-{{stoichiometric_species|join(' ')}}
-{{prototype_label}}
-{{parameter_names|join(' ')}}
 {{temperature_K}}
 {{cell_cauchy_stress_eV_angstrom3|join(' ')}}
 {% if parameter_sets is not defined -%}
@@ -19,16 +16,7 @@
         "cell-cauchy-stress.si-value": 0,
         "temperature.si-value": 0
     },
-    "fields":{
-        "a.si-value":1,
-        "parameter-values.source-value":1,
-        "library-prototype-label.source-value":1,
-        "short-name.source-value":1,
-        "meta.uuid":1,
-        "instance-id":1,
-        "crystal-genome-source-structure-id.source-value":1,
-    },
-    "database":"data", "limit":0, "flat":"on"
+    "database":"data", "limit":0,
 }) >@
 {% else -%}
 {{parameter_sets}}

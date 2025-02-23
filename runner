@@ -6,18 +6,11 @@ Universal runner for Crystal Genome Tests.
 
 from test_driver.test_driver import TestDriver
 from ast import literal_eval
+import json
 
 test_level_optional_inputs = {}
 model_name = input('Model name?\n')
 print(model_name)
-stoichiometric_species = input('Stoichiometric species (literal list of strings)?\n').split()
-print(stoichiometric_species)
-prototype_label = input('Prototype label?\n')
-print(prototype_label)
-parameter_names = input('Parameter names?\n').split()
-if parameter_names != []:    
-    print(parameter_names)
-    test_level_optional_inputs['parameter_names'] = parameter_names
 temperature_K = input('Temperature (K)?\n')
 if temperature_K != '':
     print(temperature_K)
@@ -34,6 +27,7 @@ query_result = literal_eval(input('Initial parameters from query or test_generat
 print(query_result)
 runtime_args = literal_eval(input('Runtime arguments (literal dictonary)?\n'))
 print(runtime_args)
+"""
 test = TestDriver(model_name)
 # TODO: generalize querying to finite temperature and pressure. Right now these just let the
 # driver know what to evaluate the property at, the query is always for 0K 0bar
@@ -65,3 +59,4 @@ for query_element in query_result:
         **runtime_args
         )
 test.write_property_instances_to_file()
+"""

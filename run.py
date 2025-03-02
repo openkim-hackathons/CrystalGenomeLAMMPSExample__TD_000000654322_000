@@ -49,16 +49,14 @@ test_driver = TestDriver(kim_model_name)
 # Running Using an :class:`~ase.Atoms` Object
 # -------------------------------------------
 #
-# You can run your Driver by directly passing it an :class:`ase.Atoms` object. The base :class:`~kim_tools.CrystalGenomeTestDriver`
-# (actually, its base :class:`~kim_tools.KIMTestDriver`) provides the option to ``optimize`` (``False`` by default) the atomic positions
-# and lattice vectors before running the simulation. The base class will automatically perform a symmetry analysis on the structure and populate
+# You can run your Driver by directly passing it an :class:`ase.Atoms` object.The base class will automatically perform a symmetry analysis on the structure and populate
 # the common Crystal Genome fields. Let's build a bulk wurtzite structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale`` 
 # to 0.1 and leaving the other argument as default. We are also demonstrating how to pass temperature and stress, even if our Test Driver doesn't use it.
 from ase.build import bulk
 atoms = bulk('ZnS','wurtzite',a=3.8)
 
 print ('\nRUNNING TEST DRIVER ON WURTZITE ATOMS OBJECT\n')
-test_driver(atoms,optimize=True,max_volume_scale=0.1,temperature_K=0,cell_cauchy_stress_eV_angstrom3=[0,0,0,0,0,0])
+test_driver(atoms,max_volume_scale=0.1,temperature_K=0,cell_cauchy_stress_eV_angstrom3=[0,0,0,0,0,0])
 ###############################################################################
 # You can now access the results of the calculation in the format defined by the Property Definitions
 # that the Driver uses and the `KIM Properties Framework <https://openkim.org/doc/schema/properties-framework/>`_. 
@@ -126,7 +124,7 @@ list_of_queried_structures = query_crystal_genome_structures(
 
 for queried_structure in list_of_queried_structures:
     print ('\nRUNNING TEST DRIVER ON QUERIED STRUCTURE\n')
-    test_driver(**queried_structure,max_volume_scale=0.1)
+    test_driver(input_crystal_structure=queried_structure,max_volume_scale=0.1)
 
 ###############################################################################
 # Remember that this will append the results to ``test_driver.property_instances``.

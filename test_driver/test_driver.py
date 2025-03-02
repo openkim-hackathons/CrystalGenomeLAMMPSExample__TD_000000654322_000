@@ -6,8 +6,7 @@ This is an example demonstrating usage of the kim-tools package. See https://kim
 
 """
 
-from kim_tools import SingleCrystalTestDriver
-from kim_tools import get_stoich_reduced_list_from_prototype
+from kim_tools import SingleCrystalTestDriver, minimize_wrapper, get_stoich_reduced_list_from_prototype
 
 class TestDriver(SingleCrystalTestDriver):
     def _calculate(self, max_volume_scale: float = 1e-2, num_steps: int = 10, **kwargs):
@@ -23,9 +22,9 @@ class TestDriver(SingleCrystalTestDriver):
         # The base class provides self._get_nominal_atoms(), which returns a copy of the internal Atoms object (not accessible directly).
         # This Atoms object is a primitive cell in the setting defined in https://doi.org/10.1016/j.commatsci.2017.01.017
         # Perform your calculations using this copy. If using ASE, the calculator is already attached.
-        atoms = self._get_nominal_atoms()
-        original_cell = atoms.get_cell()
-        num_atoms = len(atoms)
+        original_atoms = self._get_atoms()
+        original_cell = original_atoms.get_cell()
+        num_atoms = len(original_atoms)
 
         # The base class also provides an instance of the OpenKIM `crystal-structure-npt` property (not accessible directly).
         # This is a symmetry-reduced description of the crystal structure that is kept in sync with the internal Atoms object.
@@ -52,24 +51,31 @@ class TestDriver(SingleCrystalTestDriver):
         for i in range(-num_steps,num_steps+1):
             volume_scale = 1 + step_size*i
             linear_scale = volume_scale ** (1/3)
+            # Get atoms again
+            atoms = self._get_atoms()
             atoms.set_cell(original_cell*linear_scale,scale_atoms=True)
             volume = atoms.get_volume()
-            current_volume_per_atom = volume/num_atoms
-
+            current_volume_per_atom = volume/num_atoms    
             problem_occurred = False
             try:
                 # The self.atoms object comes pre-initialized with the calculator set to the interatomic model
                 # the Test Driver was called with. If you need to access the name of the KIM model (for example,
                 # if you are exporting the atomic configuration to run an external simulator like LAMMPS), it can
-                # be accessed at self.kim_model_name
-                potential_energy = atoms.get_potential_energy()                
-                print('Volume: %5.5f Energy: %5.5f'%(volume,potential_energy))
+                # be accessed at self.kim_model_name                
+                minimize_wrapper(atoms,variable_cell=False)
+                if self._verify_unchanged_symmetry(atoms):                    
+                    potential_energy = atoms.get_potential_energy()                
+                    print('Volume: %5.5f Energy: %5.5f'%(volume,potential_energy))
+                else:
+                    print('Atoms underwent symmetry change')
+                    problem_occurred = True
             except:
                 print('Failed to get energy at volume %f'%volume)
-                problem_occurred = True
-                disclaimer = "At least one of the requested deformations of the unit cell failed to compute a potential energy."                
+                problem_occurred = True                
             
-            if not problem_occurred:
+            if problem_occurred:
+                disclaimer = "At least one of the requested deformations of the unit cell failed to compute a potential energy." 
+            else:
                 current_binding_potential_energy_per_atom = potential_energy/num_atoms
                 volume_per_atom.append(current_volume_per_atom)
                 volume_per_formula.append(current_volume_per_atom*num_atoms_in_formula)
@@ -88,10 +94,8 @@ class TestDriver(SingleCrystalTestDriver):
         # not exchange places, even if allowed by symmetry)
         
         # This Test Driver does not actually need to do this, because the nominal structure does not change -- the energy-vs-volume
-        # curve is defined w.r.t. the original undeformed structure. For demonstration, we return the atoms object to its original 
-        # cell and update
-        atoms.set_cell(original_cell,scale_atoms=True)
-        self._update_nominal_crystal_structure
+        # curve is defined w.r.t. the original undeformed structure. 
+        self._update_nominal_parameter_values(original_atoms)
         
         # This method initializes the Property Instance and adds the keys common to all Crystal Genome properties.
         # property_name can be the full "property-id" field in your Property Definition, or the "Property Name",
@@ -103,9 +107,9 @@ class TestDriver(SingleCrystalTestDriver):
         # This method adds additional fields to your property instance by specifying the key names you defined
         # in your property definition and providing units if necessary.
         self._add_key_to_current_property_instance("volume-per-atom",volume_per_atom,
-                                                   units="angstrom^3")
+                                                   unit="angstrom^3")
         self._add_key_to_current_property_instance("volume-per-formula",volume_per_formula,
-                                                   units="angstrom^3")
+                                                   unit="angstrom^3")
 
         # You may also provide a dictionary supplying uncertainty information. It is optional, and normally
         # would not be reported for a deterministic calculation like this, only one involving some statistics,
@@ -115,8 +119,8 @@ class TestDriver(SingleCrystalTestDriver):
             "source-std-uncert-value": [0]*len(binding_potential_energy_per_atom)
         }
         self._add_key_to_current_property_instance("binding-potential-energy-per-atom",binding_potential_energy_per_atom,
-                                                   units="eV",uncertainty_info=uncertainty_info)
+                                                   unit="eV",uncertainty_info=uncertainty_info)
         self._add_key_to_current_property_instance("binding-potential-energy-per-formula",binding_potential_energy_per_formula,
-                                                   units="eV",uncertainty_info=uncertainty_info)
+                                                   unit="eV",uncertainty_info=uncertainty_info)
         
         # If your Test Driver reports multiple Property Instances, repeat the process above for each one.

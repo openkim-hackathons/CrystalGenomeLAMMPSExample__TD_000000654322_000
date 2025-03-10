@@ -35,7 +35,7 @@ for structure in query_result:
     prototype_match = structure['prototype-label']['source-value'] == query_result[0]['prototype-label']['source-value']
     assert species_match and prototype_match, "The input structures must have identical prototype-label and stoichiometric-species"
     test(
-        input_crystal_structure = structure,
+        structure,
         temperature_K = temperature_K,
         cell_cauchy_stress_eV_angstrom3 = cell_cauchy_stress_eV_angstrom3,
         **runtime_args

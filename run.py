@@ -124,7 +124,7 @@ list_of_queried_structures = query_crystal_genome_structures(
 
 for queried_structure in list_of_queried_structures:
     print ('\nRUNNING TEST DRIVER ON QUERIED STRUCTURE\n')
-    test_driver(input_crystal_structure=queried_structure,max_volume_scale=0.1)
+    test_driver(queried_structure,max_volume_scale=0.1)
 
 ###############################################################################
 # Remember that this will append the results to ``test_driver.property_instances``.

@@ -93,11 +93,11 @@ test_driver.write_property_instances_to_file()
 # the utility method :func:`kim_tools.query_crystal_genome_structures` 
 # to query for relaxed structures:
 
-from kim_tools import query_crystal_genome_structures
-list_of_queried_structures = query_crystal_genome_structures(
+from kim_tools import query_crystal_structures
+list_of_queried_structures = query_crystal_structures(
     kim_model_name=kim_model_name,
     stoichiometric_species=['Zn','S'],
-    prototype_label='AB_hP4_186_b_b')
+    short_name='Wurtzite')
 
 ###############################################################################
 # ``AB_hP4_186_b_b`` is the AFLOW prototype label describing the symmetry of the 

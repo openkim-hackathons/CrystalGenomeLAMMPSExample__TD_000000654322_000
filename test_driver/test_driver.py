@@ -19,25 +19,36 @@ class TestDriver(SingleCrystalTestDriver):
             num_steps:
                 Number of steps to take in each direction
         """
-        # The base class provides self._get_nominal_atoms(), which returns a copy of the internal Atoms object (not accessible directly).
+        # The base class provides self._get_nominal_atoms(), which provides a starting point for your calculations.
         # This Atoms object is a primitive cell in the setting defined in https://doi.org/10.1016/j.commatsci.2017.01.017
         # Perform your calculations using this copy. If using ASE, the calculator is already attached.
+        # Note that if you invoke the Test Driver using an Atoms object, this is not the same object. It is a re-generated object
+        # produced from the symmetry analysis of the input Atoms object.
+        # Additionally, any changes made to this Atoms object will not be reflected in the output of this Test Driver.
+        # If your Test Driver changes the nominal crystal structure (through equilibration or relaxation),
+        # see how to report that in the comments preceding the invocation of ``self._update_nominal_parameter_values()`` below.
         original_atoms = self._get_atoms()
         original_cell = original_atoms.get_cell()
         num_atoms = len(original_atoms)
 
-        # The base class also provides an instance of the OpenKIM `crystal-structure-npt` property (not accessible directly).
-        # This is a symmetry-reduced description of the crystal structure that is kept in sync with the internal Atoms object.
+        # The base class also provides an instance of the OpenKIM ``crystal-structure-npt``` property.
+        # This is a symmetry-reduced description of the nominal crystal structure.
         # See the definition of this property at 
         # https://openkim.org/properties/show/2023-02-21/staff@noreply.openkim.org/crystal-structure-npt
         # For a general explanation of the structure of a KIM Property Instance, see
         # https://openkim.org/doc/schema/properties-framework/
-        # To access a copy of the property instance as a Python dictionary, use `self._get_nominal_crystal_structure_npt()`
+        # To access a copy of the property instance as a Python dictionary, use ``self._get_nominal_crystal_structure_npt()```
         
         # Here we will use the prototype label to infer the number of atoms per stoichiometric formula
         prototype_label = self._get_nominal_crystal_structure_npt()['prototype-label']['source-value']
         
         num_atoms_in_formula = sum(get_stoich_reduced_list_from_prototype(prototype_label))
+        
+        # Because temperature and stress are such commonly used parameters, we provide utility functions to access them.
+        # This example Test Driver does not use them, this is for demonstration. The units requested here are the defaults,
+        # they will be what you get if you omit the ``unit`` argument.
+        print(f'Temperature (K): {self._get_temperature(unit="K")}')
+        print(f'Stress (eV/angstrom^3): {self._get_cell_cauchy_stress(unit="eV/angstrom^3")}')        
 
         binding_potential_energy_per_atom = []
         binding_potential_energy_per_formula = []
@@ -58,10 +69,10 @@ class TestDriver(SingleCrystalTestDriver):
             current_volume_per_atom = volume/num_atoms    
             problem_occurred = False
             try:
-                # The self.atoms object comes pre-initialized with the calculator set to the interatomic model
-                # the Test Driver was called with. If you need to access the name of the KIM model (for example,
+                # The Atoms object returned by self._get_atoms() comes pre-initialized with an ASE calculator.
+                # If you need to access the name of the KIM model (for example,
                 # if you are exporting the atomic configuration to run an external simulator like LAMMPS), it can
-                # be accessed at self.kim_model_name                
+                # be accessed at self.kim_model_name
                 minimize_wrapper(atoms,variable_cell=False)
                 if self._verify_unchanged_symmetry(atoms):                    
                     potential_energy = atoms.get_potential_energy()                

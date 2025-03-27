@@ -19,7 +19,7 @@ class TestDriver(SingleCrystalTestDriver):
             num_steps:
                 Number of steps to take in each direction
         """
-        # The base class provides self._get_nominal_atoms(), which provides a starting point for your calculations.
+        # The base class provides ``self._get_atoms()``, which provides a starting point for your calculations.
         # This Atoms object is a primitive cell in the setting defined in https://doi.org/10.1016/j.commatsci.2017.01.017
         # Perform your calculations using this copy. If using ASE, the calculator is already attached.
         # Note that if you invoke the Test Driver using an Atoms object, this is not the same object. It is a re-generated object
@@ -69,11 +69,15 @@ class TestDriver(SingleCrystalTestDriver):
             current_volume_per_atom = volume/num_atoms    
             problem_occurred = False
             try:
-                # The Atoms object returned by self._get_atoms() comes pre-initialized with an ASE calculator.
+                # The Atoms object returned by ``self._get_atoms()`` comes pre-initialized with an ASE calculator.
                 # If you need to access the name of the KIM model (for example,
                 # if you are exporting the atomic configuration to run an external simulator like LAMMPS), it can
-                # be accessed at self.kim_model_name
-                minimize_wrapper(atoms,variable_cell=False)
+                # be accessed at ``self.kim_model_name``
+                minimize_wrapper(atoms,variable_cell=False)                             
+                
+                # ``self._verify_unchanged_symmetry()`` is used to check that the material has not undergone a phase transition.
+                # It is OpenKIM convention that a run of SingleCrystalTestDriver should not involve phase transitions,
+                # So here any points where the crystal symmetry has changed is not recorded in the curve.                
                 if self._verify_unchanged_symmetry(atoms):                    
                     potential_energy = atoms.get_potential_energy()                
                     print('Volume: %5.5f Energy: %5.5f'%(volume,potential_energy))
@@ -97,7 +101,7 @@ class TestDriver(SingleCrystalTestDriver):
         # to facilitate this process.
         
         # If your Test Driver changes the nominal crystal structure (e.g. through relaxation or MD), you must update the nominal
-        # crystal structure before writing properties. This is done by providing an Atoms object to self._update_nominal_crystal_structure().
+        # crystal structure before writing properties. This is done by providing an Atoms object to ``self._update_nominal_crystal_structure()``.
         # SingleCrystalTestDriver expects the crystal to maintain the same space group and occupied Wyckoff positions, meaning only
         # the free parameters of the crystal unconstrained by symmetry are allowed to change. You must provide an Atoms object that
         # is a primitive cell in the same setting. Translations, permutations, and rigid rotations of the unit cell are permissible,

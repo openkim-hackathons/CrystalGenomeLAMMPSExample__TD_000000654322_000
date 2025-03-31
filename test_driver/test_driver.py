@@ -9,7 +9,7 @@ This is an example demonstrating usage of the kim-tools package. See https://kim
 from kim_tools import SingleCrystalTestDriver, minimize_wrapper, get_stoich_reduced_list_from_prototype
 
 class TestDriver(SingleCrystalTestDriver):
-    def _calculate(self, max_volume_scale: float = 1e-2, num_steps: int = 10, **kwargs):
+    def _calculate(self, max_volume_scale: float = 1e-2, num_steps: int = 10, **kwargs) -> None:
         """
         Computes the energy vs. volume curve for isotropic expansion and compression. 
 

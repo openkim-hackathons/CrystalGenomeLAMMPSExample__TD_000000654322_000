@@ -12,3 +12,8 @@ repos:
     rev: 25.1.0
     hooks:
     -   id: black
+-   repo: https://github.com/pycqa/flake8
+    rev: 7.1.2
+    hooks:
+    - id: flake8
+      args: ['--per-file-ignores=run.py:E402', --max-line-length=88]

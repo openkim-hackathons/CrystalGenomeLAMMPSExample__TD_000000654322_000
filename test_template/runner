@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import sys
-from subprocess import Popen, PIPE
 import fileinput
+import sys
+from subprocess import PIPE, Popen
 
 inp = fileinput.input()
 exe = next(inp).strip()
@@ -17,7 +17,7 @@ try:
         encoding="utf-8",
     )
     proc.communicate(input=args)
-except Exception as e:
+except Exception:
     pass
 finally:
     exit(proc.returncode)

@@ -9,8 +9,8 @@ https://kim-tools.readthedocs.io for more information.
 
 from kim_tools import (
     SingleCrystalTestDriver,
-    minimize_wrapper,
     get_stoich_reduced_list_from_prototype,
+    minimize_wrapper,
 )
 
 

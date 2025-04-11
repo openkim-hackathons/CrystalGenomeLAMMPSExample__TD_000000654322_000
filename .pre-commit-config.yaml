@@ -23,5 +23,5 @@ repos:
     hooks:
     - id: flake8
       args:
-        - '--per-file-ignores=run.py:E402'
+        - --per-file-ignores=run.py:E501,E402
         - --max-line-length=88

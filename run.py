@@ -57,7 +57,7 @@ test_driver = TestDriver(kim_model_name)
 # You can run your Driver by directly passing it an :class:`ase.Atoms` object. The base class will automatically perform a symmetry analysis on the structure
 # and store a symmetry-reduced description of it. Note that the Atoms object you pass will not itself be passed to the ``_calculate()`` method, the
 # crystal will be re-created from the symmetry-reduced description.
-# Let's build a bulk wurtzite structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale``
+# Let's build a bulk zincblende structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale``
 # to 0.1 and leaving the other argument as default. When testing a different
 # Test Driver, this is where you would instead pass the specific arguments your ``_calculate()`` method uses instead.
 # We are also demonstrating how to pass temperature and stress, even if our Test Driver doesn't use it.
@@ -69,9 +69,9 @@ test_driver = TestDriver(kim_model_name)
 
 from ase.build import bulk
 
-atoms = bulk("ZnS", "wurtzite", a=3.8)
+atoms = bulk("ZnS", "zincblende", a=5.406)
 
-print("\nRUNNING TEST DRIVER ON WURTZITE ATOMS OBJECT\n")
+print("\nRUNNING TEST DRIVER ON ZINCBLENDE ATOMS OBJECT\n")
 computed_property_instances = test_driver(
     atoms,
     max_volume_scale=0.1,

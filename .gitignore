@@ -1,5 +1,4 @@
-output/results.edn
-output/instance-*
+output/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

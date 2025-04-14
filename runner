@@ -30,12 +30,17 @@ if cell_cauchy_stress_eV_angstrom3 != []:
 else:
     print("No stress given")
     cell_cauchy_stress_eV_angstrom3 = [0, 0, 0, 0, 0, 0]
+runtime_args_text = input("Runtime arguments (literal dictonary)?\n")
+if runtime_args_text != "":
+    runtime_args = literal_eval(runtime_args_text)
+    print(runtime_args)
+else:
+    runtime_args = {}
+    print("No runtime arguments given")
 query_result = literal_eval(
     input("Initial parameters from query or test_generator (literal list of dicts)?\n")
 )
 print(json.dumps(query_result, indent=2))
-runtime_args = literal_eval(input("Runtime arguments (literal dictonary)?\n"))
-print(runtime_args)
 test = TestDriver(model_name)
 for structure in query_result:
     species_match = (

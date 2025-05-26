@@ -75,6 +75,7 @@ print("\nRUNNING TEST DRIVER ON ZINCBLENDE ATOMS OBJECT\n")
 computed_property_instances = test_driver(
     atoms,
     max_volume_scale=0.1,
+    num_steps=1,
     temperature_K=0,
     cell_cauchy_stress_eV_angstrom3=[0, 0, 0, 0, 0, 0],
 )
@@ -149,7 +150,7 @@ list_of_queried_structures = query_crystal_structures(
 
 for queried_structure in list_of_queried_structures:
     print("\nRUNNING TEST DRIVER ON QUERIED STRUCTURE\n")
-    computed_property_instances = test_driver(queried_structure, max_volume_scale=0.1)
+    computed_property_instances = test_driver(queried_structure, max_volume_scale=0.1, num_steps=1)
     # do something with computed_property_instances if you want
 
 ###############################################################################
@@ -191,7 +192,7 @@ print(
 for i in unique_structure_indices:
     print("\nRUNNING TEST DRIVER ON QUERIED STRUCTURE\n")
     computed_property_instances = test_driver(
-        list_of_queried_structures[i], max_volume_scale=0.1
+        list_of_queried_structures[i], max_volume_scale=0.1,num_steps=1,
     )
     # do something with computed_property_instances if you want
 

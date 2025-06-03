@@ -157,9 +157,13 @@ class TestDriver(SingleCrystalTestDriver):
         # This method initializes the Property Instance and adds the keys common to all
         # Crystal Genome properties. `property_name`` can be the full "property-id"
         # field in your Property Definition, or the "Property Name", which is just the
-        # short name after the slash, as used here. You can also specify whether your
-        # property includes stress and temperature (no by default), and have the option
-        # to specify a disclaimer.
+        # short name after the slash, as used here. You can also specify whether to
+        # write the stress and temperature, either by setting `write_stress` or
+        # `write_temp` to True, or by specifying the exact value you wish to write.
+        # If you specify the value for stress, you must also specify `stress_unit`.
+        # For temperature, `temperature_unit` defaults to K. See the API documentation
+        # for the method for more info.
+        # You also have the option to specify a disclaimer.
         self._add_property_instance_and_common_crystal_genome_keys(
             property_name="energy-vs-volume-isotropic-crystal",
             write_stress=False,

@@ -159,9 +159,11 @@ class TestDriver(SingleCrystalTestDriver):
         # field in your Property Definition, or the "Property Name", which is just the
         # short name after the slash, as used here. You can also specify whether to
         # write the stress and temperature, either by setting `write_stress` or
-        # `write_temp` to True, or by specifying the exact value you wish to write.
+        # `write_temp` to True, in which case the nominal values the Test Driver was
+        # initialized with will be written, or by specifying the exact value you wish
+        # to write.
         # If you specify the value for stress, you must also specify `stress_unit`.
-        # For temperature, `temperature_unit` defaults to K. See the API documentation
+        # For temperature, `temp_unit` defaults to K. See the API documentation
         # for the method for more info.
         # You also have the option to specify a disclaimer.
         self._add_property_instance_and_common_crystal_genome_keys(

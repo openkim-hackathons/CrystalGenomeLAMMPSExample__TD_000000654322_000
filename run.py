@@ -15,7 +15,7 @@ Invoking a Crystal Genome Test Driver Directly
 
         python CrystalGenomeASEExample__TD_000000654321_000/run.py
 
-This file is intended to demonstrate how to directly run Test Drivers that derive from :class:`~kim_tools.SingleCrystalTestDriver`
+This file is intended to demonstrate how to directly run Test Drivers that derive from :class:`~kim_tools.test_driver.core.SingleCrystalTestDriver`
 for debugging. When developing your Test Driver, copy this file into its top-level directory and modify it (probably removing
 all of these complicated comments as well).
 
@@ -111,7 +111,7 @@ print("--------------------------------------\n")
 # the pipeline will pass an instance of the `crystal-structure-npt <https://openkim.org/properties/show/crystal-structure-npt>`_
 # OpenKIM property containing a symmetry-reduced description of the crystal.
 # You can replicate this functionality using
-# the utility method :func:`kim_tools.query_crystal_structures`
+# the utility method :func:`kim_tools.test_driver.core.query_crystal_structures`
 # to query for relaxed structures:
 
 from kim_tools import query_crystal_structures
@@ -144,7 +144,7 @@ list_of_queried_structures = query_crystal_structures(
 #
 # A single set of the arguments given above (model, species, and AFLOW prototype label)
 # may or may not correspond to multiple local minima (i.e. multiple sets of free parameters),
-# so :func:`kim_tools.query_crystal_structures` returns a list of
+# so :func:`kim_tools.test_driver.core.query_crystal_structures` returns a list of
 # dictionaries. You can then run your ``TestDriver`` by passing one of these
 # dictionaries instead of an :class:`ase.Atoms` object.
 
@@ -158,7 +158,7 @@ for queried_structure in list_of_queried_structures:
 # instead of querying for potential-specific minima, reference data will be queried instead
 # (typically DFT-relaxed). This is useful if you are using a model that is not on OpenKIM.org.
 # In this case you should minimize the structure first. Just like any other Test Driver,
-# :class:`kimvv.EquilibriumCrystalStructure` can take the dictionaries returned by :func:`kim_tools.query_crystal_structures`
+# :class:`kimvv.EquilibriumCrystalStructure` can take the dictionaries returned by :func:`kim_tools.test_driver.core.query_crystal_structures`
 # Here we are also demonstrating the ability to query by the crystal's name instead of
 # or in addition to the AFLOW Prototype Label. This will be searched as a case-insensitive
 # regex, so partial matches will work. Please note that, like any human-curated set of names,
@@ -166,7 +166,7 @@ for queried_structure in list_of_queried_structures:
 # but not "FCC" or "Face Centered Cubic".
 #
 # Note that when querying for Reference Data, it is quite likely that the query will return duplicate structures
-# for this, the :func:`kim_tools.detect_unique_crystal_structures` utility is provided.
+# for this, the :func:`kim_tools.test_driver.core.detect_unique_crystal_structures` utility is provided.
 #
 # .. todo::
 #
@@ -199,7 +199,7 @@ for i in unique_structure_indices:
 ###############################################################################
 # In addition to returning the computed property instances on each run,
 # Test Drivers accumulate all the property instances computed over all calls,
-# which can be accessed from :attr:`~kim_tools.KIMTestDriver.property_instances` as
+# which can be accessed from :attr:`~kim_tools.test_driver.core.KIMTestDriver.property_instances` as
 # a list of Python dictionaries, or written to a file (default ``output/results.edn``)
 #
 

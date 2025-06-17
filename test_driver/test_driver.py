@@ -106,18 +106,46 @@ class TestDriver(SingleCrystalTestDriver):
                 # symmetry has changed are not recorded in the curve.
                 if self._verify_unchanged_symmetry(atoms):
                     potential_energy = atoms.get_potential_energy()
-                    print("Volume: %5.5f Energy: %5.5f" % (volume, potential_energy))
+                    stress = atoms.get_stress()
+                    print(f"Volume: {volume} Energy: {potential_energy}")
+                    # If your Test Driver changes the nominal crystal structure (e.g.
+                    # through relaxation or MD) AND you intend to write the changed
+                    # structure as a property instance, you must update the nominal
+                    # crystal structure before writing properties. This is done by
+                    # providing an Atoms object to
+                    # ``self._update_nominal_crystal_structure()``.
+                    # SingleCrystalTestDriver expects the crystal to maintain the same
+                    # space group and occupied Wyckoff positions, meaning only the free
+                    # parameters of the crystal unconstrained by symmetry are allowed
+                    # to change. You must provide an Atoms object that is a primitive
+                    # cell in the same setting. Translations, permutations, and rigid
+                    # rotations of the unit cell are permissible, but the identity of
+                    # the lattice vectors may not change during the property computation
+                    # (e.g. lattice vectors a and c may not exchange places, even if
+                    # allowed by symmetry). ``_update_nominal_parameter_values``
+                    # raises an exception if a symmetry change is detected. Here, it
+                    # will be caught and the Test Driver will move on to the next
+                    # structure evaluation. If your Test Driver only deals with one
+                    # structure and it changes symmetry, you should allow it to fail.
+                    self._update_nominal_parameter_values(atoms)
+                    # Normally, you would use either ``_verify_unchanged_symmetry``
+                    # (if you don't intend to write the changed structure), or
+                    # ``_update_nominal_parameter_values`` (if you do), not both, as
+                    # done here for demonstration.
                 else:
                     print("Atoms underwent symmetry change")
                     problem_occurred = True
             except Exception:
-                print("Failed to get energy at volume %f" % volume)
+                print(
+                    "Failed to get energy, stress, or parameter values "
+                    f"at volume {volume}"
+                )
                 problem_occurred = True
 
             if problem_occurred:
                 disclaimer = (
                     "At least one of the requested deformations of the unit cell "
-                    "failed to compute a potential energy."
+                    "underwent a phase transformation or otherwise failed to evaluate."
                 )
             else:
                 current_binding_potential_energy_per_atom = potential_energy / num_atoms
@@ -132,47 +160,47 @@ class TestDriver(SingleCrystalTestDriver):
                     current_binding_potential_energy_per_atom * num_atoms_in_formula
                 )
 
+                # Because we have evaluated a structure at some combination of
+                # temperature and/or stress (only stress in this case), we might as
+                # well write an instance of the "crystal-structure-npt" property at
+                # every loop iteration. The newly defined
+                # "energy-vs-volume-isotropic-crystal" property will be written
+                # at the end of the loop.
+
+                # This method initializes the Property Instance and adds the keys
+                # common to all Crystal Genome properties. `property_name`` can be the
+                # full "property-id" field in the Property Definition, or the
+                # "Property Name", which is just the short name after the slash, as
+                # used here. The options `write_stress` and `write_temp` can be set to
+                # `False` (default), `True`, in which case the internally stored nominal
+                # values will be written, or set to a value in case you wish to write
+                # a different value. Here we tell the Driver to write a provided stress
+                # value and write the nominal temperature (zero).
+                # If you specify the value for stress, you must also specify
+                # `stress_unit` for the value you have provided.
+                # For temperature, `temp_unit` defaults to K. See the API documentation
+                # for the method for more info.
+                self._add_property_instance_and_common_crystal_genome_keys(
+                    property_name="crystal-structure-npt",
+                    write_stress=stress,
+                    write_temp=True,
+                    stress_unit="eV/angstrom^3",
+                )
+                # Because "crystal-structure-npt" has no additional custom fields, we
+                # are done with this property
+
         # Now it is time to write the output in the format you created in your Property
-        # Definition. The base class provides utility methods to facilitate this
-        # process.
-
-        # If your Test Driver changes the nominal crystal structure (e.g. through
-        # relaxation or MD), you must update the nominal crystal structure before
-        # writing properties. This is done by providing an Atoms object to
-        # ``self._update_nominal_crystal_structure()``.
-        # SingleCrystalTestDriver expects the crystal to maintain the same space group
-        # and occupied Wyckoff positions, meaning only the free parameters of the
-        # crystal unconstrained by symmetry are allowed to change. You must provide an
-        # Atoms object that is a primitive cell in the same setting. Translations,
-        # permutations, and rigid rotations of the unit cell are permissible, but the
-        # identity of the lattice vectors may not change during the property computation
-        # (e.g. lattice vectors a and c may
-        # not exchange places, even if allowed by symmetry)
-
-        # This Test Driver does not actually need to do this, because the nominal
-        # structure does not change -- the energy-vs-volume curve is defined w.r.t.
-        # the original undeformed structure.
+        # Definition. Here we omit stress and temperature because we did not include
+        # them in our Definition, and optionally add a disclaimer. First, since we have
+        # been changing the nominal crystal structure, we must reset it to the original
+        # structure.
         self._update_nominal_parameter_values(original_atoms)
-
-        # This method initializes the Property Instance and adds the keys common to all
-        # Crystal Genome properties. `property_name`` can be the full "property-id"
-        # field in your Property Definition, or the "Property Name", which is just the
-        # short name after the slash, as used here. You can also specify whether to
-        # write the stress and temperature, either by setting `write_stress` or
-        # `write_temp` to True, in which case the nominal values the Test Driver was
-        # initialized with will be written, or by specifying the exact value you wish
-        # to write.
-        # If you specify the value for stress, you must also specify `stress_unit`.
-        # For temperature, `temp_unit` defaults to K. See the API documentation
-        # for the method for more info.
-        # You also have the option to specify a disclaimer.
         self._add_property_instance_and_common_crystal_genome_keys(
             property_name="energy-vs-volume-isotropic-crystal",
             write_stress=False,
             write_temp=False,
             disclaimer=disclaimer,
         )
-
         # This method adds additional fields to your property instance by specifying the
         # key names you defined in your property definition and providing units if
         # necessary.

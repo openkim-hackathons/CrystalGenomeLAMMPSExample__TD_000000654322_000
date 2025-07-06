@@ -240,9 +240,7 @@ class TestDriver(SingleCrystalTestDriver):
         # (e.g. cat.jpg will be automatically moved to the path output/cat-1.jpg
         # and reported in the property accordingly.) For this example, we just copy
         # the picture packaged with this Test Driver.
-        cat_path = path.join(
-            path.dirname(path.realpath(__file__)), "data", "cat.jpg"
-        )
+        cat_path = path.join(path.dirname(path.realpath(__file__)), "data", "cat.jpg")
         save_path = "cat.jpg"
         shutil.copy(cat_path, save_path)
         self._add_file_to_current_property_instance("cat-picture", save_path)

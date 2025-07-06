@@ -54,22 +54,17 @@ test_driver = TestDriver(kim_model_name)
 # Running Using an :class:`~ase.Atoms` Object
 # -------------------------------------------
 #
-# You can run your Driver by directly passing it an :class:`ase.Atoms` object. The base class will automatically perform a symmetry analysis on the structure
-# and store a symmetry-reduced description of it. Note that the Atoms object you pass will not itself be passed to the ``_calculate()`` method, the
-# crystal will be re-created from the symmetry-reduced description.
-# Let's build a bulk zincblende structure and run our Driver on it, setting the ``_calculate()`` argument ``max_volume_scale``
-# to 0.1 and leaving the other argument as default. When testing a different
+# You can run your Driver by directly passing it an :class:`ase.Atoms` object. The base class will automatically
+# perform a symmetry analysis on the structure and store a symmetry-reduced description of it. Note that the Atoms
+# object you pass will not itself be passed to the ``_calculate()`` method, the crystal will be re-created from the
+# symmetry-reduced description. Let's build a bulk zincblende structure and run our Driver on it, setting the
+# ``_calculate()`` argument ``max_volume_scale`` to 0.1 and leaving the other argument as default. When testing a different
 # Test Driver, this is where you would instead pass the specific arguments your ``_calculate()`` method uses instead.
 # We are also demonstrating how to pass temperature and stress, even if our Test Driver doesn't use it.
-#
-# .. todo::
-#
-#   Add example of using ECS to minimize here
-#
 
 from ase.build import bulk
 
-atoms = bulk("ZnS", "zincblende", a=5.406)
+atoms = bulk("ZnS", "zincblende", a=5.4093)
 
 print("\nRUNNING TEST DRIVER ON ZINCBLENDE ATOMS OBJECT\n")
 computed_property_instances = test_driver(
@@ -97,6 +92,40 @@ print(
     )
 )
 print("--------------------------------------\n")
+###############################################################################
+# You probably received a warning that the configuration you provided had a
+# non-negligible force or stress. This is because the atoms object was not minimized
+# with the potential we are using. One option to minimize the configuration
+# is to use the ``EquilibriumCrystalStructure`` Test Driver, available in the
+# `kimvv <https://github.com/openkim/kimvv>` package, which can simply be installed
+# with
+#
+# .. code-block:: bash
+#
+#     pip install kimvv
+#
+# Once your Test Driver is published on openkim.org, it will be incorporated into
+# ``kimvv`` and available to users just as easily!
+#
+# Instead an :class:`ase.Atoms` object, your Test Driver can use a KIM Property
+# Instance containing a symmetry-reduced description of the crystal.
+# ``EquilibriumCrystalStructure`` returns
+# 3 different properties for each crystal (structure, energy, and density),
+# but all of them contain the required fields to build a crystal, so we can
+# pass any of them to our Test Driver to use as a relaxed structure.
+
+from kimvv import EquilibriumCrystalStructure
+
+ecs = EquilibriumCrystalStructure(kim_model_name)
+print("\nMINIMIZING STRUCTURE\n")
+relaxed_structure = ecs(atoms)[0]
+
+print("\nRUNNING TEST DRIVER ON EquilibriumCrystalStructure OUTPUT\n")
+computed_property_instances = test_driver(
+    relaxed_structure,
+    max_volume_scale=0.1,
+    num_steps=1,
+)
 
 ###############################################################################
 # Testing Using a Prototype Label
@@ -105,11 +134,9 @@ print("--------------------------------------\n")
 # In the KIM Processing Pipeline, Test Drivers automatically run
 # on of thousands of different crystal structures under the Crystal Genome
 # testing framework. These are precomputed relaxations
-# of each structure with each compatible interatomic potential in OpenKIM.
+# of each structure with each compatible interatomic potential in OpenKIM
+# expressed as KIM Property Instances.
 #
-# Instead of passing your ``TestDriver`` an :class:`ase.Atoms` object,
-# the pipeline will pass an instance of the `crystal-structure-npt <https://openkim.org/properties/show/crystal-structure-npt>`_
-# OpenKIM property containing a symmetry-reduced description of the crystal.
 # You can replicate this functionality using
 # the utility method :func:`kim_tools.test_driver.core.query_crystal_structures`
 # to query for relaxed structures:
@@ -121,6 +148,7 @@ list_of_queried_structures = query_crystal_structures(
     stoichiometric_species=["Zn", "S"],
     prototype_label="AB_hP4_186_b_b",
 )
+# do something with computed_property_instances if you want
 
 ###############################################################################
 # ``AB_hP4_186_b_b`` is the AFLOW prototype label describing the symmetry of the
@@ -160,7 +188,8 @@ for queried_structure in list_of_queried_structures:
 # instead of querying for potential-specific minima, reference data will be queried instead
 # (typically DFT-relaxed). This is useful if you are using a model that is not on OpenKIM.org.
 # In this case you should minimize the structure first. Just like any other Test Driver,
-# :class:`kimvv.EquilibriumCrystalStructure` can take the dictionaries returned by :func:`kim_tools.test_driver.core.query_crystal_structures`
+# :class:`kimvv.EquilibriumCrystalStructure` can take the dictionaries returned by
+# :func:`kim_tools.test_driver.core.query_crystal_structures`.
 # Here we are also demonstrating the ability to query by the crystal's name instead of
 # or in addition to the AFLOW Prototype Label. This will be searched as a case-insensitive
 # regex, so partial matches will work. Please note that, like any human-curated set of names,
@@ -173,11 +202,6 @@ for queried_structure in list_of_queried_structures:
 # .. todo::
 #
 #   Expand the database of short names
-#
-# .. todo::
-#
-#   Add ECS minimization here
-#
 
 list_of_queried_structures = query_crystal_structures(
     stoichiometric_species=["Zn", "S"], short_name="Wurtzite"
@@ -192,9 +216,12 @@ print(
 )
 
 for i in unique_structure_indices:
-    print("\nRUNNING TEST DRIVER ON QUERIED STRUCTURE\n")
+    # Minimize the structure with the EquilibriumCrystalStructure we previously instantiated
+    print("\nMINIMIZING STRUCTURE\n")
+    relaxed_structure = ecs(list_of_queried_structures[i])[0]
+    print("\nRUNNING TEST DRIVER ON MINIMIZED QUERIED STRUCTURE\n")
     computed_property_instances = test_driver(
-        list_of_queried_structures[i],
+        relaxed_structure,
         max_volume_scale=0.1,
         num_steps=1,
     )

@@ -7,6 +7,9 @@ https://kim-tools.readthedocs.io for more information.
 
 """
 
+import shutil
+from os import path
+
 from kim_tools import (
     SingleCrystalTestDriver,
     get_stoich_reduced_list_from_prototype,
@@ -231,6 +234,18 @@ class TestDriver(SingleCrystalTestDriver):
             unit="eV",
             uncertainty_info=uncertainty_info,
         )
+        # This adds a "file" type key to the current Property Instance. It will
+        # automatically be numbered according to the current Property Instance and
+        # moved to the output directory if it is not already there
+        # (e.g. cat.jpg will be automatically moved to the path output/cat-1.jpg
+        # and reported in the property accordingly.) For this example, we just copy
+        # the picture packaged with this Test Driver.
+        cat_path = path.join(
+            path.dirname(path.realpath(__file__)), "data", "cat.jpg"
+        )
+        save_path = "cat.jpg"
+        shutil.copy(cat_path, save_path)
+        self._add_file_to_current_property_instance("cat-picture", save_path)
 
         # If your Test Driver reports multiple Property Instances, repeat the process
         # above for each one.

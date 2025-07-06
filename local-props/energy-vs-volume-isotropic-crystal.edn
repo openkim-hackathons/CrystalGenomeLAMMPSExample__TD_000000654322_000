@@ -37,6 +37,13 @@
     "required"     true
     "description" "The volume of the unit cell divided by the number of atoms in the unit cell, multiplied by the number of atoms in the reduced stoichiometric formula, i.e. the sum of indices in the first section of the prototype-label."
   }
+  "cat-picture" {
+    "type"         "file"
+    "has-unit"     false
+    "extent"       []
+    "required"     true
+    "description" "This is a picture of a cat. It will be used to demonstrate how to manage auxiliary files and add them to properties."
+  }  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; END OF SECTION YOU SHOULD CHANGE (besides possibly uncommenting the block below)

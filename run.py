@@ -97,7 +97,7 @@ print("--------------------------------------\n")
 # non-negligible force or stress. This is because the atoms object was not minimized
 # with the potential we are using. One option to minimize the configuration
 # is to use the ``EquilibriumCrystalStructure`` Test Driver, available in the
-# `kimvv <https://github.com/openkim/kimvv>` package, which can simply be installed
+# `kimvv <https://github.com/openkim/kimvv>`_ package, which can simply be installed
 # with
 #
 # .. code-block:: bash

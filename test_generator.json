@@ -3,8 +3,9 @@
 {"stoichiometric_species": ["U"], "prototype_label": "A_oC4_63_c", "version": "000"}
 {"stoichiometric_species": ["Mo", "Ni"], "prototype_label": "AB4_tI10_87_a_h", "version": "000"}
 {"stoichiometric_species": ["O", "Ti"], "prototype_label": "A2B_tP6_136_f_a", "version": "000"}
+{"stoichiometric_species": ["Al", "Pd"], "prototype_label": "AB_hR26_148_a2f_b2f", "version": "000"}
 {"stoichiometric_species": ["O", "Si"], "prototype_label": "A2B_hP9_154_c_a", "version": "000"}
-{"stoichiometric_species": ["O", "Ti"], "prototype_label": "A2B_hP9_189_fg_ad", "version": "000"}
+{"stoichiometric_species": ["Fe", "P"], "prototype_label": "A2B_hP9_189_fg_ad", "version": "000"}
 {"stoichiometric_species": ["As", "Ga"], "prototype_label": "AB_cP16_205_c_c", "version": "000"}
 {"stoichiometric_species": ["Ce", "O"], "prototype_label": "AB2_cF12_225_a_c", "version": "000"}
 {"stoichiometric_species": ["Al"], "prototype_label": "A_cF4_225_a", "temperature_K": 0.0, "cell_cauchy_stress_eV_angstrom3": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "crystal_genome_test_args": {"max_volume_scale": 0.1}, "version": "000"}

@@ -1,5 +1,5 @@
-CrystalGenomeASEExample
-=======================
+CrystalGenomeLAMMPSExample
+==========================
 
 Example usage of the `kim-tools <https://kim-tools.readthedocs.io>`_ package to make a Crystal Genome Test Driver. This Test Driver computes the energy vs. volume of an arbitrary crystal under isotropic contraction and expansion.
 

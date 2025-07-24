@@ -1,0 +1,17 @@
+# Initialize model
+boundary        p p p
+kim             init ${model} metal unit_conversion_mode
+
+# Read and set up geometry, topology and model
+print           "=============================================================="
+print           "Input datafile             = ${datafile}"
+print           "=============================================================="
+read_data       ${datafile}
+change_box      all triclinic 
+kim             interactions ${species}
+
+variable        E_eV equal pe/${_u_energy} # Note that we will use thermo_modify norm yes later, so this is automatically per atom
+
+run 0
+
+print           "${E_eV}" file ${outfile}

@@ -2,6 +2,8 @@
 boundary        p p p
 kim             init ${model} metal unit_conversion_mode
 
+neigh_modify one 4000
+
 # Read and set up geometry, topology and model
 print           "=============================================================="
 print           "Input datafile             = ${datafile}"
